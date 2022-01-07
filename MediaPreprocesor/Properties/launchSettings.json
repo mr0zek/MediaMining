@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "PicturesPrep": {
+      "commandName": "Project",
+      "commandLineArgs": "c:\\My\\PicturesPrep\\SourcePics c:\\My\\PicturesPrep\\DestPics c:\\My\\PicturesPrep\\Tracks\\records-all.json.conv"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "commandLineArgs": "\"-v C:\\\\My:/data\""
+    }
+  }
+}

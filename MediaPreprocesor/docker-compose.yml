@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  mediaprep:
+    image: ${DOCKER_REGISTRY-}mediaprep
+    volumes:
+    - type: bind
+      source: c:\My\PicturesPrep\SourcePics\
+      target: /data/source
+    - type: bind
+      source: c:\My\PicturesPrep\DestPics\
+      target: /data/destination
+    - type: bind
+      source: c:\My\PicturesPrep\Tracks\
+      target: /data/tracks    
+    build:
+      context: .
+      dockerfile: Dockerfile      
