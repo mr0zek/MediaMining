@@ -5,9 +5,13 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>.</DockerfileContext>
   </PropertyGroup>
+
+    <PropertyGroup>
+      <DockerfileRunArguments>-v "c:\My\PicturesPrep\SourcePics\:/data/source" -v "c:\My\PicturesPrep\DestPics\:/data/destination" -v "c:\My\PicturesPrep\Events\:/data/events" -v "c:\My\PicturesPrep\Tracks\:/data/tracks"</DockerfileRunArguments>
+    </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="GeoJSON.Net" Version="1.2.19" />
-    <PackageReference Include="Geolocation" Version="1.2.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
@@ -17,5 +21,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BaseImageWithExifTool\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Events\Events.csproj" />
   </ItemGroup>
 </Project>

@@ -8,6 +8,7 @@ namespace GoogleTakeoutProcessor
     public double LatitudeE7;
     public double LongitudeE7;
     public string Timestamp;
+    public string Source;
 
     [JsonIgnore]
     public double Lat => LatitudeE7 / 10000000;

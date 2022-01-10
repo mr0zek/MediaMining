@@ -7,8 +7,10 @@
 
   <ItemGroup>
     <PackageReference Include="GeoJSON.Net" Version="1.2.19" />
-    <PackageReference Include="Geolocation" Version="1.2.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Events\Events.csproj" />
   </ItemGroup>
 
 </Project>

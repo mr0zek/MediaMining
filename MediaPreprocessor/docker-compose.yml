@@ -12,7 +12,17 @@ services:
       target: /data/destination
     - type: bind
       source: c:\My\PicturesPrep\Tracks\
-      target: /data/tracks    
+      target: /data/tracks 
+    - type: bind
+      source: c:\My\PicturesPrep\Events\
+      target: /data/events 
     build:
       context: .
       dockerfile: Dockerfile      
+
+  mediapreprocessor:
+    image: ${DOCKER_REGISTRY-}mediapreprocessor
+    build:
+      context: ..
+      dockerfile: MediaPreprocessor/Dockerfile
+

@@ -1,10 +1,6 @@
-﻿# Todo
-
-## Simple
-- remove empty folders from source
-- searching for duplicates
-- tagging places (taken from google json file)
-- groupping by event - events taken from json file
+﻿# Done
+- remove empty folders from source after importing media
+- groupping by event while moving pictures (Folder name "{DateFrom} - {Event.Name}") - events taken from json file
   {
     Events:{
       Event{
@@ -19,7 +15,13 @@
       }
     }
   }
-  Folder name "{DateFrom} - {Event.Name}" 
+  
+
+# Todo
+
+## Simple
+- searching for duplicates
+- tagging places (taken from google json file)
 - adding GPS track to event in GEOJSON
 
 ## Hard

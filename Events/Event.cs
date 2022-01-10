@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace GoogleTakeoutProcessor
+namespace Events
 {
-  class Event
+  public class Event
   {
     public string Name { get; set; }
     public DateTime DateFrom { get; set; }
