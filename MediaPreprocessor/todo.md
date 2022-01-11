@@ -23,6 +23,7 @@
 - searching for duplicates
 - tagging places (taken from google json file)
 - adding GPS track to event in GEOJSON
+- adding location name to PictureMetadata
 
 ## Hard
 - recognizing persons and tagging photo with their names

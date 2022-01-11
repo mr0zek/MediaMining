@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace GoogleTakeoutProcessor
+namespace GPSDataProcessor
 {
   public  class Location
   {

@@ -2,20 +2,42 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
-using System.Xml.Serialization;
 using Events;
 using GeoJSON.Net.Feature;
 using GeoJSON.Net.Geometry;
 using GPSDataProcessor.Gpx;
 using Newtonsoft.Json;
 
-namespace GoogleTakeoutProcessor
+namespace GPSDataProcessor
 {
   class Program
   {
     static void Main(string[] args)
     {
+      ReverseGeolocationResponse UpdateLocationName(string lat, string lon)
+      {
+        HttpClient httpClient = new HttpClient();
+        var s = "text/html,application/xhtml+xml,application/xml,image/avif,image/webp,image/apng,*/*,application/signed-exchange";
+        foreach (var s1 in s.Split(","))
+        {
+          httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(s1));
+        }
+
+        httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Mozilla", "5.0"));
+        httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Chrome", "97.0.4692.71"));
+
+        var task = httpClient.GetAsync($"https://nominatim.openstreetmap.org/reverse?format=json&lat={lat}&lon={lon}&zoom=18&addressdetails=1");
+        task.Wait();
+        var t2 = task.Result.Content.ReadAsStringAsync();
+          t2.Wait();
+        return JsonConvert.DeserializeObject<ReverseGeolocationResponse>(t2.Result);
+      }
+
+      ReverseGeolocationResponse s = UpdateLocationName("51.1601582", "17.1114598");
+
       EventsRoot events = EventsRoot.LoadFromPath(@"c:\My\PicturesPrep\Events\");
       DivideByYear(@"c:\My\PicturesPrep\Tracks-All\", @"c:\My\PicturesPrep\Tracks", events);
     }
