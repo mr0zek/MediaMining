@@ -101,7 +101,7 @@ namespace MediaPreprocessor
               }
             }
 
-            logger.Log(LogLevel.Information, "- GPS coordinate : " + exifData.GPSLocation);
+            logger.Log(LogLevel.Information, $"- GPS coordinate : {exifData.GPSLocation.Lat},{exifData.GPSLocation.Lon}");
 
             exifData.UpdateGeolocationName();
 
@@ -123,7 +123,7 @@ namespace MediaPreprocessor
 
     private static string RelocateFile(string targetPath, DateTime createdDate, string sourceFileName, EventsRoot events)
     {
-      string eventName = events.GetEventName(createdDate);
+      string eventName = events.GetEvent(createdDate)?.GetUniqueName();
       string targetDirectory = Path.Combine(targetPath, createdDate.ToString("yyyy"), createdDate.ToString("yyyy-MM-dd"));
       if (eventName != null)
       {

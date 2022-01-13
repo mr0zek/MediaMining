@@ -9,13 +9,13 @@ namespace Events
   {
     public List<Event> Events { get; set; } = new List<Event>();
 
-    public string GetEventName(DateTime date)
+    public Event GetEvent(DateTime date)
     {
       foreach (var @event in Events)
       {
         if (@event.InEvent(date))
         {
-          return $"{@event.DateFrom:yyyy-MM-dd} - {@event.Name}";
+          return @event;
         }
       }
 

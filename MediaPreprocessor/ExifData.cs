@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -76,7 +78,6 @@ namespace MediaPreprocessor
     {
       
       StringBuilder stringBuilder = new StringBuilder();
-      stringBuilder.Append("-stay_open 0 -overwrite_original");
       if (GPSLocation != null)
       {
         stringBuilder.Append(
@@ -85,26 +86,25 @@ namespace MediaPreprocessor
           $" -gpslongitude={GPSLocation.Lon.ToString(System.Globalization.CultureInfo.InvariantCulture)}");
       }
 
+      stringBuilder.Append($" -ImageDescription=\"{string.Join(";", ImageDescription)}\"");
+      stringBuilder.Append($" -Description=\"{string.Join(";", ImageDescription)}\"");
+
       if (LocationName != null)
       {
-        stringBuilder.Append($" -City={LocationName}");
+        stringBuilder.Append($" -City=\"{LocationName}\"");
       }
 
       if (Country != null)
       {
-        stringBuilder.Append($" -Country={Country}");
+        stringBuilder.Append($" -Country=\"{Country}\"");
       }
-
-      stringBuilder.Append($"-ImageDescription=\"{string.Join(";",ImageDescription)}\" -Description=\"{string.Join(";", ImageDescription)}\"");
-
-      stringBuilder.Append($" \"{fileName}\"");
 
       using (Process myProcess = new Process())
       {
         myProcess.StartInfo.UseShellExecute = false;
         myProcess.StartInfo.FileName = "/exiftool/exiftool";
         myProcess.StartInfo.RedirectStandardOutput = true;
-        myProcess.StartInfo.Arguments = stringBuilder.ToString();
+        myProcess.StartInfo.Arguments = $"-stay_open 0 -overwrite_original {stringBuilder} \"{fileName}\"";
         myProcess.StartInfo.CreateNoWindow = true;
         if (!myProcess.Start())
         {

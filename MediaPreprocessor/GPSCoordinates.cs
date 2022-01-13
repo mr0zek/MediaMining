@@ -10,33 +10,31 @@ namespace MediaPreprocessor
 {
   internal class GPSCoordinates : Dictionary<string, List<Tuple<DateTime, IPosition>>> 
   {
-    private readonly string _tracksPath;
+    private readonly IDictionary<string,string> _trackPaths = new Dictionary<string, string>();
 
     public GPSCoordinates(string tracksPath)
     {
-      _tracksPath = tracksPath;
+      _trackPaths = Directory.GetFiles(tracksPath, "*.geojson", SearchOption.AllDirectories)
+        .ToDictionary(f => Path.GetFileName(f), f => f);
     }
 
     public void LoadCoordinatesForDate(DateTime date)
     {
-      if (this.ContainsKey(date.Year.ToString()))
+      if (this.ContainsKey(date.Date.ToString("yyyy-MM-dd")))
       {
         return;
       }
 
-      var trackFiles = Directory.GetFiles(Path.Combine(_tracksPath, date.Year.ToString()));
-      this[date.Year.ToString()] = new List<Tuple<DateTime, IPosition>>();
+      var trackFile = _trackPaths[$"{date.Date:yyyy-MM-dd}.geojson"];
+      this[date.Date.ToString("yyyy-MM-dd")] = new List<Tuple<DateTime, IPosition>>();
 
-      foreach (var trackFile in trackFiles)
-      {
-        FeatureCollection features = JsonConvert.DeserializeObject<FeatureCollection>(File.ReadAllText(trackFile));
+      FeatureCollection features = JsonConvert.DeserializeObject<FeatureCollection>(File.ReadAllText(trackFile));
 
-        var positions = features.Features.Select(f =>
-          new Tuple<DateTime, IPosition>(DateTime.Parse(f.Properties["reportTime"].ToString()),
-            (f.Geometry as Point).Coordinates));
+      var positions = features.Features.Select(f =>
+        new Tuple<DateTime, IPosition>(DateTime.Parse(f.Properties["reportTime"].ToString()),
+          (f.Geometry as Point).Coordinates));
 
-        this[date.Year.ToString()].AddRange(positions);
-      }
+      this[date.Date.ToString("yyyy-MM-dd")].AddRange(positions);
     }
 
     public IPosition Find(DateTime date)

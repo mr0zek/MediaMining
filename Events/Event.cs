@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Events
 {
@@ -11,6 +12,11 @@ namespace Events
     public bool InEvent(DateTime date)
     {
       return date.Date <= DateTo && date.Date >= DateFrom;
+    }
+
+    public string GetUniqueName()
+    {
+      return $"{DateFrom:yyyy-MM-dd} - {Name}";
     }
   }
 }
