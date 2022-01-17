@@ -7,7 +7,7 @@
   </PropertyGroup>
 
     <PropertyGroup>
-      <DockerfileRunArguments>-v "c:\My\PicturesPrep\SourcePics\:/data/source" -v "c:\My\PicturesPrep\DestPics\:/data/destination" -v "c:\My\PicturesPrep\Events\:/data/events" -v "c:\My\PicturesPrep\Tracks\:/data/tracks"</DockerfileRunArguments>
+      <DockerfileRunArguments>-v "c:\My\MediaMining\SourcePics\:/data/source" -v "c:\My\MediaMining\DestPics\:/data/destination" -v "c:\My\MediaMining\Events\:/data/events" -v "c:\My\PicturesPrep\Tracks\:/data/tracks"</DockerfileRunArguments>
     </PropertyGroup>
 
   <ItemGroup>
@@ -21,8 +21,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BaseImageWithExifTool\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Events\Events.csproj" />
   </ItemGroup>
 </Project>

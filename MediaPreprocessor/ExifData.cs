@@ -36,9 +36,12 @@ namespace MediaPreprocessor
     public ExifData(IDictionary<string, string> data)
     {
       // GPSLocation
-      var lat = ConvertCoordinate(data["GPS Latitude"]);
-      var lon = ConvertCoordinate(data["GPS Longitude"]);
-      GPSLocation = new Coordinate(lat, lon);
+      if (data.ContainsKey("GPS Latitude") && data.ContainsKey("GPS Longitude"))
+      {
+        var lat = ConvertCoordinate(data["GPS Latitude"]);
+        var lon = ConvertCoordinate(data["GPS Longitude"]);
+        GPSLocation = new Coordinate(lat, lon);
+      }
 
       // CreatedDate
       var dateTagNames = new string[] { "Date/Time Original", "Create Date" };

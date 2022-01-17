@@ -9,8 +9,6 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "MediaPrep
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GPSDataProcessor", "GPSDataProcessor\GPSDataProcessor.csproj", "{D97D80D1-9671-46C3-A4E9-709DC46F9DD1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Events", "Events\Events.csproj", "{B7985564-F183-4AC3-8FA8-573574448B10}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{D97D80D1-9671-46C3-A4E9-709DC46F9DD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D97D80D1-9671-46C3-A4E9-709DC46F9DD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D97D80D1-9671-46C3-A4E9-709DC46F9DD1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B7985564-F183-4AC3-8FA8-573574448B10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B7985564-F183-4AC3-8FA8-573574448B10}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B7985564-F183-4AC3-8FA8-573574448B10}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B7985564-F183-4AC3-8FA8-573574448B10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

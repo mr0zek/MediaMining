@@ -27,7 +27,7 @@ namespace MediaPreprocessor
         .AddInMemoryCollection(new KeyValuePair<string, string>[] { new("targetPath", "/data/destination") })
         .AddInMemoryCollection(new KeyValuePair<string, string>[] { new("tracksPath", "/data/tracks") })
         .AddInMemoryCollection(new KeyValuePair<string, string>[] { new("eventsPath", "/data/events") })
-        .AddInMemoryCollection(new KeyValuePair<string, string>[] { new("knownFileFormats", ".mp4|.jpg") })
+        .AddInMemoryCollection(new KeyValuePair<string, string>[] { new("knownFileFormats", ".mp4|.jpg|.mts") })
         .AddInMemoryCollection(new KeyValuePair<string, string>[] { new("runInterval", "5000") })
         .Build();
 
@@ -76,14 +76,7 @@ namespace MediaPreprocessor
             logger.Log(LogLevel.Information, "Processing file: " + sourceFileName);
             ExifData exifData = ExifData.LoadFromFile(sourceFileName);
 
-            logger.Log(LogLevel.Information, "- media create date : " + exifData.CreatedDate);
-
-
-            string targetFileName = RelocateFile(targetPath, exifData.CreatedDate, sourceFileName, events);
-            if (targetFileName == null)
-            {
-              continue;
-            }
+            logger.Log(LogLevel.Information, "- media create date : " + exifData.CreatedDate);            
 
             if (exifData.GPSLocation == null)
             {
@@ -99,6 +92,12 @@ namespace MediaPreprocessor
               {
                 exifData.GPSLocation = new ExifData.Coordinate(position.Latitude, position.Longitude);
               }
+            }
+            
+            string targetFileName = RelocateFile(targetPath, exifData, sourceFileName, events);
+            if (targetFileName == null)
+            {
+              continue;
             }
 
             logger.Log(LogLevel.Information, $"- GPS coordinate : {exifData.GPSLocation.Lat},{exifData.GPSLocation.Lon}");
@@ -121,15 +120,19 @@ namespace MediaPreprocessor
       }
     }
 
-    private static string RelocateFile(string targetPath, DateTime createdDate, string sourceFileName, EventsRoot events)
+    private static string RelocateFile(string targetPath, ExifData exifData, string sourceFileName, EventsRoot events)
     {
-      string eventName = events.GetEvent(createdDate)?.GetUniqueName();
-      string targetDirectory = Path.Combine(targetPath, createdDate.ToString("yyyy"), createdDate.ToString("yyyy-MM-dd"));
+      string eventName = events.GetEvent(exifData.CreatedDate)?.GetUniqueName();
+      string targetDirectory = Path.Combine(targetPath, exifData.CreatedDate.ToString("yyyy"), exifData.CreatedDate.ToString("yyyy-MM-dd"));
       if (eventName != null)
       {
-        targetDirectory = Path.Combine(targetPath, createdDate.ToString("yyyy"), eventName, createdDate.ToString("yyyy-MM-dd"));
+        targetDirectory = Path.Combine(targetPath, exifData.CreatedDate.ToString("yyyy"), eventName, exifData.CreatedDate.ToString("yyyy-MM-dd"));
       }
       string targetFileName = Path.Combine(targetDirectory, Path.GetFileName(sourceFileName));
+      if(exifData.GPSLocation == null)
+      {
+        targetFileName = Path.Combine(Path.GetDirectoryName(sourceFileName), "No-Gps-Location", Path.GetFileName(sourceFileName));
+      }
 
       if (File.Exists(targetFileName))
       {
