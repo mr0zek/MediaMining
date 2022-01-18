@@ -19,11 +19,11 @@ namespace GPSDataProcessor
       Date = date;
     }
         
-    internal class PositionComparer : IEqualityComparer<Position>
+    internal class PositionDistanceComparer : IEqualityComparer<Position>
     {
       private readonly double _distance;
 
-      public PositionComparer(double distance)
+      public PositionDistanceComparer(double distance)
       {
         _distance = distance;
       }
@@ -86,6 +86,20 @@ namespace GPSDataProcessor
       lonDelta /= dateAndPositions.Count();
 
       return new Position(Latitude + latDelta, Longitude + lonDelta, Date + dateDelta);
-    }    
+    }
+
+    public override bool Equals(object obj)
+    {
+      var t = obj is Position position &&
+             Date == position.Date &&
+             Latitude == position.Latitude &&
+             Longitude == position.Longitude;
+      return t;
+    }
+
+    public override int GetHashCode()
+    {
+      return HashCode.Combine(Date, Latitude, Longitude);
+    }
   }
 }

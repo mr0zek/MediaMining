@@ -14,33 +14,49 @@ namespace GPSDataProcessor
   {
     static void Main(string[] args)
     {
-      EventsRoot events = EventsRoot.LoadFromPath(@"c:\My\MediaMining\Events\");
-      var inputTracks = @"c:\My\MediaMining\Tracks\Inbox";
+      var eventsPath = @"c:\My\MediaMining\Events\";
+      EventsRoot events = EventsRoot.LoadFromPath(eventsPath);
+      var inputTracks = @"c:\My\MediaMining\Inbox\Tracks\";
       var outputTracks = @"c:\My\MediaMining\Tracks";
 
-      Positions positions = Positions.LoadFrom(inputTracks);
+      var trackFiles = Directory.GetFiles(inputTracks, "*.*");
 
-      positions.WriteToDirectory(outputTracks, events);
-
-      var eventLogs = positions.CreateEventLog(events);
-
-      foreach (EventLog eventLog in eventLogs.Values)
+      foreach (var trackFile in trackFiles)
       {
-        eventLog.WriteToFile(
-          Path.Combine(
-            outputTracks, 
-            eventLog.Event.DateFrom.Year.ToString(), 
-            eventLog.Event.GetUniqueName(), 
-            eventLog.Event.GetUniqueName() + ".geojson"));
-        eventLog.WriteDescription(
-          Path.Combine(
-            outputTracks,
-            eventLog.Event.DateFrom.Year.ToString(),
-            eventLog.Event.GetUniqueName(),
-            eventLog.Event.GetUniqueName() + ".md"));
+        Positions positions = Positions.LoadFrom(trackFile);
+
+        positions.WriteToDirectory(outputTracks, events);
       }
 
-      positions.ExportDailyDistanceStats(Path.Combine(outputTracks, "distance_stats.csv"));
+      foreach (var e in events.Events)
+      {
+        string eventsDirectory = Path.Combine(eventsPath,e.DateFrom.Year.ToString(), e.GetUniqueName());
+        var tf = Directory.GetFiles(eventsDirectory);
+
+        foreach (var trackFile in trackFiles)
+        {
+          Positions positions = Positions.LoadFrom(trackFile);
+          var eventLogs = positions.CreateEventLog(events);
+
+          foreach (EventLog eventLog in eventLogs.Values)
+          {
+            eventLog.WriteToFile(
+              Path.Combine(
+                outputTracks,
+                eventLog.Event.DateFrom.Year.ToString(),
+                eventLog.Event.GetUniqueName(),
+                eventLog.Event.GetUniqueName() + ".geojson"));
+            eventLog.WriteDescription(
+              Path.Combine(
+                outputTracks,
+                eventLog.Event.DateFrom.Year.ToString(),
+                eventLog.Event.GetUniqueName(),
+                eventLog.Event.GetUniqueName() + ".md"));
+          }
+        }
+      }
+
+      //positions.ExportDailyDistanceStats(Path.Combine(outputTracks, "distance_stats.csv"));
     }                    
   }
 }

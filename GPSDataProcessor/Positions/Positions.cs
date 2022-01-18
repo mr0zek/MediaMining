@@ -21,25 +21,20 @@ namespace GPSDataProcessor
       _tracks = positions.GroupBy(f=>f.Date.Date).ToDictionary(f=>f.Key, f=>new Track(f.OrderBy(f=>f.Date)));
     }
 
-    internal static Positions LoadFrom(string tracksPath)
+    internal static Positions LoadFrom(string trackFile)
     {
       var result = new List<Position>();
 
-      var trackFiles = Directory.GetFiles(tracksPath, "*.*");
-
-      foreach (var trackFile in trackFiles)
+      if (Path.GetExtension(trackFile).ToLower() == ".gpx")
       {
-        if (Path.GetExtension(trackFile).ToLower() == ".gpx")
-        {
-          result.AddRange(LoadGpx(trackFile));
-          Console.WriteLine("GPX loaded : " + trackFile);
-        }
+        result.AddRange(LoadGpx(trackFile));
+        Console.WriteLine("GPX loaded : " + trackFile);
+      }
 
-        if (Path.GetExtension(trackFile).ToLower() == ".json") //google takeout
-        {
-          result.AddRange(LoadFromGoogleTakeout(trackFile));
-          Console.WriteLine("GoogleTakeout loaded : " + trackFile);
-        }
+      if (Path.GetExtension(trackFile).ToLower() == ".json") //google takeout
+      {
+        result.AddRange(LoadFromGoogleTakeout(trackFile));
+        Console.WriteLine("GoogleTakeout loaded : " + trackFile);
       }
 
       return new Positions(result);
@@ -104,7 +99,13 @@ namespace GPSDataProcessor
             e.GetUniqueName(),
             track.Key.Date.ToString("yyyy-MM-dd") + ".geojson");
         }
-        track.Value.WriteAsPoints(fileName);
+        Track t = new Track(new Position[] { });
+        if (File.Exists(fileName))
+        {
+          t = Track.Load(fileName);
+        }
+        t.Merge(track.Value);
+        t.WriteAsPoints(fileName);        
       }      
     }
 

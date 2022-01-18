@@ -112,9 +112,24 @@ namespace GPSDataProcessor
 
       var r4 = result.Select(f => f.First().CalculateCenter(f));
 
-      var r5 = r4.Distinct(new Position.PositionComparer(0.2)).ToList();
+      var r5 = r4.Distinct(new Position.PositionDistanceComparer(0.2)).ToList();
 
       return r5;
+    }
+
+    internal static Track Load(string fileName)
+    {
+      var fc = JsonConvert.DeserializeObject<FeatureCollection>(File.ReadAllText(fileName));
+      return new Track(fc.Features.Select(f => new Position(
+        (f.Geometry as Point).Coordinates.Latitude,
+        (f.Geometry as Point).Coordinates.Longitude,
+        DateTime.Parse(f.Properties["reportTime"].ToString()))));
+    }
+
+    internal void Merge(Track track)
+    {
+      IEnumerable<Position> x = track._positions.Except(_positions).ToList();
+      _positions = _positions.Concat(x).OrderBy(f=>f.Date);
     }
   }
 }
