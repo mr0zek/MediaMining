@@ -30,33 +30,33 @@ namespace GPSDataProcessor
 
       foreach (var e in events.Events)
       {
-        string eventsDirectory = Path.Combine(eventsPath,e.DateFrom.Year.ToString(), e.GetUniqueName());
+        string eventsDirectory = Path.Combine(eventsPath, e.DateFrom.Year.ToString(), e.GetUniqueName());
         var tf = Directory.GetFiles(eventsDirectory);
 
+        Positions positions = new Positions(new Position[] { });
         foreach (var trackFile in trackFiles)
         {
-          Positions positions = Positions.LoadFrom(trackFile);
-          var eventLogs = positions.CreateEventLog(events);
-
-          foreach (EventLog eventLog in eventLogs.Values)
-          {
-            eventLog.WriteToFile(
-              Path.Combine(
-                outputTracks,
-                eventLog.Event.DateFrom.Year.ToString(),
-                eventLog.Event.GetUniqueName(),
-                eventLog.Event.GetUniqueName() + ".geojson"));
-            eventLog.WriteDescription(
-              Path.Combine(
-                outputTracks,
-                eventLog.Event.DateFrom.Year.ToString(),
-                eventLog.Event.GetUniqueName(),
-                eventLog.Event.GetUniqueName() + ".md"));
-          }
+          positions.Merge(Positions.LoadFrom(trackFile));
         }
-      }
 
-      //positions.ExportDailyDistanceStats(Path.Combine(outputTracks, "distance_stats.csv"));
+        var eventLogs = positions.CreateEventLog(events);
+
+        eventLogs[e].WriteToFile(
+          Path.Combine(
+            outputTracks,
+            e.DateFrom.Year.ToString(),
+            e.GetUniqueName(),
+            e.GetUniqueName() + ".geojson"));
+        eventLogs[e].WriteDescription(
+          Path.Combine(
+            outputTracks,
+            e.DateFrom.Year.ToString(),
+            e.GetUniqueName(),
+            e.GetUniqueName() + ".md"));
+      }
+    }
+
+    //positions.ExportDailyDistanceStats(Path.Combine(outputTracks, "distance_stats.csv"));
     }                    
   }
 }

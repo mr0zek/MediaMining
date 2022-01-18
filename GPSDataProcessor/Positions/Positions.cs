@@ -129,5 +129,10 @@ namespace GPSDataProcessor
 
       File.WriteAllText(fileName, builder.ToString());
     }
+
+    public void Merge(Positions positions)
+    {
+      _tracks.Concat(positions._tracks);
+    }
   }
 }
