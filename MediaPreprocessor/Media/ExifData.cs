@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
 using MediaPreprocessor.Positions;
-using Newtonsoft.Json;
 
 namespace MediaPreprocessor.Media
 {
@@ -75,8 +72,8 @@ namespace MediaPreprocessor.Media
           $" -gpslongitude={GPSLocation.Longitude.ToString(System.Globalization.CultureInfo.InvariantCulture)}");
       }
 
-      stringBuilder.Append($" -DateTimeOriginal=\"{CreatedDate.ToString("yyyy-MM-dd hh:mm:ss")}\"");
-      stringBuilder.Append($" -FileModifyDate=\"{CreatedDate.ToString("yyyy-MM-dd hh:mm:ss")}\"");
+      stringBuilder.Append($" -DateTimeOriginal=\"{CreatedDate.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")}\"");
+      stringBuilder.Append($" -FileModifyDate=\"{CreatedDate.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")}\"");
       
       if (LocationName != null)
       {

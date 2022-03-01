@@ -6,12 +6,10 @@ namespace MediaPreprocessor.Handlers.ImportHandlers
 {
   public class MediaLocationNameUpdater : IMediaImportHandler
   {
-    private readonly IMediaRepository _mediaRepository;
     private readonly IGeolocation _geolocation;
 
-    public MediaLocationNameUpdater(IMediaRepository mediaRepository, IGeolocation geolocation)
+    public MediaLocationNameUpdater(IGeolocation geolocation)
     {
-      _mediaRepository = mediaRepository;
       _geolocation = geolocation;
     }
 

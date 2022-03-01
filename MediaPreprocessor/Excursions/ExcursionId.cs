@@ -13,7 +13,7 @@ namespace MediaPreprocessor.Excursions
 
     protected override object[] GetValues()
     {
-      return new[] {_id};
+      return new object[] {_id};
     }
   }
 }

@@ -18,7 +18,12 @@ namespace MediaPreprocessor.Positions
       Longitude = longitude;
       Date = date;
     }
-        
+
+    public override string ToString()
+    {
+      return $"Lat:{Latitude}, Lon:{Longitude}, Date:{Date}";
+    }
+
     internal class PositionDistanceComparer : IEqualityComparer<Position>
     {
       private readonly double _distance;
@@ -66,24 +71,23 @@ namespace MediaPreprocessor.Positions
       return UnitOfLength.Kilometers.ConvertFromMiles(dist);
     }
 
-    public Position CalculateCenter(IEnumerable<Position> dateAndPositions)
+    public static Position CalculateCenter(IEnumerable<Position> positions)
     {
-      TimeSpan dateDelta = new TimeSpan();
-      double latDelta = 0;
-      double lonDelta = 0;
+      positions = positions.OrderBy(f => f.Date);
 
-      foreach (var dateAndPosition in dateAndPositions)
+      double lat = 0;
+      double lon = 0;
+
+      foreach (var position in positions)
       {
-        dateDelta = Date - dateAndPosition.Date;
-        latDelta = Latitude - dateAndPosition.Latitude;
-        lonDelta = Longitude - dateAndPosition.Longitude;
+        lat += position.Latitude;
+        lon += position.Longitude;
       }
 
-      dateDelta /= dateAndPositions.Count();
-      latDelta /= dateAndPositions.Count();
-      lonDelta /= dateAndPositions.Count();
+      lat /= positions.Count();
+      lon /= positions.Count();
 
-      return new Position(Latitude + latDelta, Longitude + lonDelta, Date + dateDelta);
+      return new Position(lat, lon, positions.First().Date + (positions.Last().Date - positions.First().Date)/2);
     }
 
     protected override object[] GetValues()

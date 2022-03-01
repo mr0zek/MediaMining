@@ -12,7 +12,10 @@ RUN apk add --no-cache perl make \
 	&& make test \
 	&& make install \
 	&& cd .. \
-	&& rm -rf Image-ExifTool-12.38.tar.gz
+	&& rm -rf Image-ExifTool-12.38.tar.gz 
+
+RUN apk add --no-cache perl apk add --no-cache nodejs \
+	&& apk add --no-cache npm
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 

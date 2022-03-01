@@ -10,12 +10,10 @@ namespace MediaPreprocessor.Excursions
 {
   class ExcursionRepository : IExcursionRepository
   {
-    private readonly string _excursionsPath;
-    private IDictionary<ExcursionId, Excursion> _excursions = new Dictionary<ExcursionId, Excursion>();
+    private readonly IDictionary<ExcursionId, Excursion> _excursions = new Dictionary<ExcursionId, Excursion>();
 
     public ExcursionRepository(string excursionsPath)
     {
-      _excursionsPath = excursionsPath;
       LoadFromPath(excursionsPath);
     }
 

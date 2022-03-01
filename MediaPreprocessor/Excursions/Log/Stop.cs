@@ -31,13 +31,9 @@ namespace MediaPreprocessor.Excursions.Log
         {"marker-size","large"},
         {"marker-symbol","star"},
         {"duration", Duration },
-        {"name", Name }
+        {"name", Name },
+        {"date", Position.Date.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")}
       }));
-    }
-
-    internal static int ByDateComparer(Stop x, Stop y)
-    {
-      return x.Position.Date.CompareTo(y.Position.Date);
     }
   }
 }

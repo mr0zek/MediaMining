@@ -26,6 +26,8 @@ namespace MediaPreprocessor.Excursions.Log
         excursionLog.AddDayTrack(dt, track);
       }
 
+      excursionLog.PostProcess();
+
       return excursionLog;
     }
   }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using Autofac;
 using MediaPreprocessor.Excursions;
 using MediaPreprocessor.Excursions.Log;
@@ -7,7 +6,6 @@ using MediaPreprocessor.Handlers;
 using MediaPreprocessor.Importers;
 using MediaPreprocessor.Media;
 using MediaPreprocessor.Positions;
-using MediaPreprocessor.Shared;
 using Microsoft.Extensions.Logging;
 
 namespace MediaPreprocessor
@@ -35,9 +33,9 @@ namespace MediaPreprocessor
       var builder = new ContainerBuilder();
 
       // Register individual components
-      builder.RegisterInstance(LoggerFactory.Create(builder =>
+      builder.RegisterInstance(LoggerFactory.Create(b =>
       {
-        builder.AddConsole();
+        b.AddConsole();
       })).AsImplementedInterfaces();
       builder.RegisterType<Importers.Importers>().WithParameter("deleteAfterImport", true).AsImplementedInterfaces();
       builder.RegisterType<MediaRepository>().WithParameter("basePath","/data/destination").SingleInstance().AsImplementedInterfaces();

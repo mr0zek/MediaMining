@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using MediaPreprocessor.Positions;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace MediaPreprocessor.Geolocation
@@ -12,10 +13,13 @@ namespace MediaPreprocessor.Geolocation
   {
     private readonly IDictionary<Position, ReverseGeolocationData> _cache = new Dictionary<Position, ReverseGeolocationData>();
     private readonly string _filePath;
+    private ILogger _log;
 
-    public Geolocation(string filePath)
+    public Geolocation(string filePath, ILoggerFactory loggerFactory)
     {
       _filePath = filePath;
+
+      _log = loggerFactory.CreateLogger<Geolocation>();
 
       if (File.Exists(filePath))
       {
@@ -29,6 +33,7 @@ namespace MediaPreprocessor.Geolocation
     {
       if (_cache.ContainsKey(position))
       {
+        _log.LogDebug($"GetReverseGeolocationData - loaded from cache - {position}");
         return _cache[position];
       }
 
@@ -52,6 +57,8 @@ namespace MediaPreprocessor.Geolocation
       _cache[position].Position = position;
 
       File.WriteAllText(_filePath, JsonConvert.SerializeObject(new ReverseGeolocationDataRoot(_cache.Values), Formatting.Indented));
+
+      _log.LogDebug($"GetReverseGeolocationData - loaded from nominatim - {position}");
 
       return _cache[position];
     }

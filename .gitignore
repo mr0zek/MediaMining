@@ -7,3 +7,5 @@ desktop.ini
 **/obj/*
 *.mdf
 *.ldf
+/.vs/MediaMining/DesignTimeBuild/.dtbcache.v2
+/.vs/MediaMining/DesignTimeBuild/*

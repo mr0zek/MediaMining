@@ -6,7 +6,7 @@ namespace MediaPreprocessor.Shared
   {
     private readonly DateTime _value;
 
-    private Date(DateTime date)
+    public Date(DateTime date)
     {
       _value = date.Date;
     }
