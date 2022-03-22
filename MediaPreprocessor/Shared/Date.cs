@@ -18,6 +18,11 @@ namespace MediaPreprocessor.Shared
       return _value.ToString("yyyy-MM-dd");
     }
 
+    public string ToString(string format)
+    {
+      return _value.ToString(format);
+    }
+
     public static Date Parse(string? s)
     {
       return new Date(DateTime.Parse(s));

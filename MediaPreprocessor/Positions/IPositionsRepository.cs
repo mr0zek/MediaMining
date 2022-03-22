@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using MediaPreprocessor.Handlers;
 using MediaPreprocessor.Shared;
 
 namespace MediaPreprocessor.Positions
@@ -9,5 +10,6 @@ namespace MediaPreprocessor.Positions
     Position Get(DateTime date);
     void AddRange(IEnumerable<Position> positions);
     Track GetFromDay(Date date);
+    DateRange GetDateRange();
   }
 }

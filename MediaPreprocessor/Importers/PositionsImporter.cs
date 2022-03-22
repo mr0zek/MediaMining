@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MediaPreprocessor.Handlers.ImportHandlers;
 using MediaPreprocessor.Positions;
+using MediaPreprocessor.Shared;
 
 namespace MediaPreprocessor.Importers
 {
@@ -16,23 +18,22 @@ namespace MediaPreprocessor.Importers
       _handlers = handlersFactory.Create();
     }
 
-    public void Import(string filePath)
+    public ISet<Date> Import(string filePath)
     {
       var positions = LoadPositions(filePath).ToArray();
       _positionsRepository.AddRange(positions);
 
-      var g = positions.GroupBy(f => f.Date.Date);
+      var g = positions.GroupBy(f => new Date(f.Date));
 
       foreach (var handler in _handlers)
       {
         handler.Handle(g.First().Key, g.Last().Key);
       }
+
+      return g.Select(f => f.Key).ToHashSet();
     }
 
-    public bool CanImport(string path)
-    {
-      return Path.GetExtension(path).ToLower() == ".gpx";
-    }
+    public abstract bool CanImport(string path);
 
     protected abstract IEnumerable<Position> LoadPositions(string trackFile);
   }

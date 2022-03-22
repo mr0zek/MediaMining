@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MediaPreprocessor.Handlers.PostImportHandlers;
+using MediaPreprocessor.Shared;
 using Microsoft.Extensions.Logging;
 
 namespace MediaPreprocessor.Importers
@@ -12,17 +14,21 @@ namespace MediaPreprocessor.Importers
     private readonly ILogger _log;
     private readonly IInbox _inbox;
     private readonly bool _deleteAfterImport;
+    private readonly IEnumerable<IPostImportHandler> _postImportHandlers;
 
-    public Importers(IEnumerable<IImporter> importers, IInbox inbox, ILoggerFactory loggerFactory, bool deleteAfterImport)
+    public Importers(IEnumerable<IImporter> importers, IInbox inbox, ILoggerFactory loggerFactory, bool deleteAfterImport, IEnumerable<IPostImportHandler> postImportHandlers)
     {
       _importers = importers;
       _inbox = inbox;
       _deleteAfterImport = deleteAfterImport;
+      _postImportHandlers = postImportHandlers;
       _log = loggerFactory.CreateLogger<Importers>();
     }
 
     public void Import()
     {
+      HashSet<Date> changedMediaDate = new HashSet<Date>();
+
       foreach (var filePath in _inbox.GetFiles())
       {
         IImporter importer = _importers.FirstOrDefault(f => f.CanImport(filePath));
@@ -35,7 +41,15 @@ namespace MediaPreprocessor.Importers
         {
           try
           {
-            importer.Import(filePath);
+            ISet<Date> dates = importer.Import(filePath);
+
+            foreach (var date in dates)
+            {
+              if (!changedMediaDate.Contains(date))
+              {
+                changedMediaDate.Add(date);
+              }
+            }
 
             if (_deleteAfterImport)
             {
@@ -46,6 +60,14 @@ namespace MediaPreprocessor.Importers
           {
             _log.LogError(ex.ToString());
           }
+        }
+      }
+
+      if (changedMediaDate.Count > 0)
+      {
+        foreach (var postImportHandler in _postImportHandlers)
+        {
+          postImportHandler.Handle(changedMediaDate);
         }
       }
 

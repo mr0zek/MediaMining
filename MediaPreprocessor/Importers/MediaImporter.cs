@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MediaPreprocessor.Handlers.ImportHandlers;
 using MediaPreprocessor.Media;
+using MediaPreprocessor.Shared;
 using Microsoft.Extensions.Logging;
 
 namespace MediaPreprocessor.Importers
@@ -20,11 +22,11 @@ namespace MediaPreprocessor.Importers
       _mediaHandlers = mediaHandlersFactory.Create();
     }
 
-    public void Import(string filePath)
+    public ISet<Date> Import(string filePath)
     {
       try
       {
-        Media.Media p = Media.Media.FromFile(filePath, new MediaId(Path.GetFileName(filePath)));
+        Media.Media p = Media.Media.FromFile(filePath, MediaId.NewId());
         _mediaRepository.AddToProcess(p); 
 
         foreach (var handler in _mediaHandlers)
@@ -33,6 +35,8 @@ namespace MediaPreprocessor.Importers
         }    
 
         _mediaRepository.SaveOrUpdate(p);
+
+        return new HashSet<Date>() {p.CreatedDate};
       }
       catch (Exception ex)
       {

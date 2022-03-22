@@ -13,9 +13,7 @@ using System.Xml;
 
 namespace MediaPreprocessor.Importers.Gpx
 {
-    public enum GpxObjectType { None, Attributes, Metadata, WayPoint, Route, Track };
-
-    public sealed class GpxReader : IDisposable
+  public sealed class GpxReader : IDisposable
     {
         private readonly XmlReader Reader_;
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MediaPreprocessor.Handlers.ImportHandlers;
 using MediaPreprocessor.Importers.Gpx;
 using MediaPreprocessor.Positions;
 
@@ -8,6 +9,11 @@ namespace MediaPreprocessor.Importers
 {
   class GpxPositionsImporter : PositionsImporter
   {
+    public override bool CanImport(string path)
+    {
+      return Path.GetExtension(path).ToLower() == ".gpx";
+    }
+
     protected override IEnumerable<Position> LoadPositions(string trackFile)
     {
       List<Position> result = new List<Position>();

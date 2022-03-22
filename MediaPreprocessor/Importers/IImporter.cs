@@ -1,8 +1,11 @@
-﻿namespace MediaPreprocessor.Importers
+﻿using System.Collections.Generic;
+using MediaPreprocessor.Shared;
+
+namespace MediaPreprocessor.Importers
 {
   public interface IImporter
   {
-    void Import(string filePath);
+    ISet<Date> Import(string filePath);
     bool CanImport(string filePath);
   }
 }

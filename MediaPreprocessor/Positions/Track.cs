@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using GeoJSON.Net.Feature;
 using GeoJSON.Net.Geometry;
-using MediaPreprocessor.Excursions.Log;
+using MediaPreprocessor.Events.Log;
 using MediaPreprocessor.Geolocation;
 using Newtonsoft.Json;
 
@@ -59,7 +59,11 @@ namespace MediaPreprocessor.Positions
     }
 
     public double CalculateDistance()
-    { 
+    {
+      if (!Positions.Any())
+      {
+        return 0;
+      }
       double distance = 0;
       Position lastCoordinate = Positions.First();
       foreach (var position in Positions)
@@ -113,6 +117,16 @@ namespace MediaPreprocessor.Positions
       }
 
       return coordinatesFromDay.Last();
+    }
+
+    public void Write(string filePath)
+    {
+      var s = JsonConvert.SerializeObject(new FeatureCollection(Positions.Select(f=> new Feature(
+        new Point(
+          new GeoJSON.Net.Geometry.Position(f.Latitude, f.Longitude)),
+          new { reportTime = f.Date})).ToList()), Formatting.Indented);
+
+      File.WriteAllText(filePath, s);
     }
   }
 }

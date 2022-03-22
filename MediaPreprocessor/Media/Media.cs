@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using MediaPreprocessor.Excursions;
+using MediaPreprocessor.Events;
 using MediaPreprocessor.Positions;
 
 namespace MediaPreprocessor.Media
@@ -17,7 +17,7 @@ namespace MediaPreprocessor.Media
 
     public Position GpsLocation { get; set; }
     public MediaId MediaId { get; }
-    public ExcursionId ExcursionId { get; set; }
+    public EventId EventId { get; set; }
     public DateTime CreatedDate { get; set; }
     public string Path { get; set; }
     public string LocationName { get; set; }

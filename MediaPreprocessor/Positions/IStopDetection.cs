@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using MediaPreprocessor.Excursions.Log;
+using MediaPreprocessor.Events.Log;
 
 namespace MediaPreprocessor.Positions
 {

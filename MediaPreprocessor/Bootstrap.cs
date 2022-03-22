@@ -1,8 +1,10 @@
 ﻿using System.Threading;
 using Autofac;
-using MediaPreprocessor.Excursions;
-using MediaPreprocessor.Excursions.Log;
+using MediaPreprocessor.Events;
+using MediaPreprocessor.Events.Log;
 using MediaPreprocessor.Handlers;
+using MediaPreprocessor.Handlers.ImportHandlers;
+using MediaPreprocessor.Handlers.PostImportHandlers;
 using MediaPreprocessor.Importers;
 using MediaPreprocessor.Media;
 using MediaPreprocessor.Positions;
@@ -39,13 +41,11 @@ namespace MediaPreprocessor
       })).AsImplementedInterfaces();
       builder.RegisterType<Importers.Importers>().WithParameter("deleteAfterImport", true).AsImplementedInterfaces();
       builder.RegisterType<MediaRepository>().WithParameter("basePath","/data/destination").SingleInstance().AsImplementedInterfaces();
-      builder.RegisterType<ExcursionLogRepository>().WithParameter("basePath", "/data/excursionsLog").AsImplementedInterfaces();
-      builder.RegisterType<ExcursionRepository>().WithParameter("excursionsPath", "/data/excursions").SingleInstance().AsImplementedInterfaces();
-      builder.RegisterType<PositionsRepository>().WithParameter("path", "/data/positions").SingleInstance().AsImplementedInterfaces();
-      builder.RegisterType<ExcursionLogFactory>().AsImplementedInterfaces();
+      builder.RegisterType<EventRepository>().WithParameter("eventsPath", "/data/events").SingleInstance().AsImplementedInterfaces();
+      builder.RegisterType<PositionsRepository>().WithParameter("basePath", "/data/positions").SingleInstance().AsImplementedInterfaces();
       builder.RegisterType<Geolocation.Geolocation>().WithParameter("filePath", "/data/geolocation/geolocation.json").SingleInstance().AsImplementedInterfaces();
       builder.RegisterType<Inbox>().WithParameter("sourcePath", new []{ "/data/source"}).AsImplementedInterfaces();
-      builder.RegisterType<ExcursionLogFactory>().AsImplementedInterfaces();
+      builder.RegisterType<EventLogFactory>().AsImplementedInterfaces();
       builder.RegisterType<MediaImporter>().WithParameter("knownFileTypes", new []{"jpg","png","mp4","mts","avi","mkv"}).AsImplementedInterfaces();
       builder.RegisterType<GpxPositionsImporter>().AsImplementedInterfaces();
       builder.RegisterType<StopDetection>().AsImplementedInterfaces();
@@ -54,6 +54,9 @@ namespace MediaPreprocessor
       builder.RegisterType<PositionsImportHandlerFactory>().AsImplementedInterfaces();
       builder.RegisterAssemblyTypes(GetType().Assembly).Where(f => f.IsAssignableTo(typeof(IPositionsImportHandler)));
       builder.RegisterAssemblyTypes(GetType().Assembly).Where(f => f.IsAssignableTo(typeof(IMediaImportHandler)));
+      builder.RegisterAssemblyTypes(GetType().Assembly).Where(f => f.IsAssignableTo(typeof(IPostImportHandler)));
+      builder.RegisterType<EventLogUpdater>().AsImplementedInterfaces().WithParameter("basePath", "/data/eventsLog");
+      builder.RegisterType<CalculateDailyStats>().AsImplementedInterfaces().WithParameter("outputFileName", "/data/positions/distanceStats.csv");
 
       return builder.Build();
     }

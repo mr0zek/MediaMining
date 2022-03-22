@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MediaPreprocessor.Handlers.ImportHandlers;
 using MediaPreprocessor.Importers.GoogleTakeout;
 using MediaPreprocessor.Positions;
 using Newtonsoft.Json;
@@ -9,6 +10,11 @@ namespace MediaPreprocessor.Importers
 {
   class GoogleTakoutImporter : PositionsImporter
   {
+    public override bool CanImport(string path)
+    {
+      return Path.GetExtension(path).ToLower() == ".json";
+    }
+
     protected override IEnumerable<Position> LoadPositions(string trackFile)
     {
       var records = JsonConvert.DeserializeObject<GoogleJsonRecords>(File.ReadAllText(trackFile));

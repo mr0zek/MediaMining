@@ -7,13 +7,14 @@
   </PropertyGroup>
 
     <PropertyGroup>
-      <DockerfileRunArguments>-v "c:\data\source\:/data/source" -v "c:\data\destination\:/data/destination"  -v "c:\data\excursionsLog\:/data/excursionsLog" -v "c:\data\excursions\:/data/excursions" -v "c:\data\Positions\:/data/positions" -v "c:\data\exiftool\:/exifTool/" -v "c:\data\geolocation\:/data/geolocation/"</DockerfileRunArguments>
+      <DockerfileRunArguments>-v "c:\data\source\:/data/source" -v "c:\data\destination\:/data/destination"  -v "c:\data\eventsLog\:/data/eventsLog" -v "c:\data\events\:/data/events" -v "c:\data\Positions\:/data/positions" -v "c:\data\exiftool\:/exifTool/" -v "c:\data\geolocation\:/data/geolocation/"</DockerfileRunArguments>
       <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
     </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.3.0" />
     <PackageReference Include="GeoJSON.Net" Version="1.2.19" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="10.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />

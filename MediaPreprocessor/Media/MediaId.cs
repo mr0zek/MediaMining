@@ -23,5 +23,10 @@ namespace MediaPreprocessor.Media
     {
       return new[] {_id};
     }
+
+    public static MediaId NewId()
+    {
+      return new MediaId(Guid.NewGuid().ToString());
+    }
   }
 }
