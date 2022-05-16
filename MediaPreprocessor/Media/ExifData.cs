@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using MediaPreprocessor.Positions;
 
 namespace MediaPreprocessor.Media
@@ -14,6 +16,7 @@ namespace MediaPreprocessor.Media
     public DateTime CreatedDate { get; set; }
     public string LocationName { get; set; }
     public Position GPSLocation { get; set; }
+    public static string ExifToolPath { get; set; } = "/exiftool/exiftool";
 
     public ExifData(IDictionary<string, string> data)
     {
@@ -48,9 +51,9 @@ namespace MediaPreprocessor.Media
     private double ConvertCoordinate(string coordinate)
     {
       var r = Regex.Match(coordinate, "(?<deg>[0-9.]+)\\s+deg\\s+(?<min>[0-9.]+)'\\s+(?<sec>[0-9.]+)\"\\s*([EWNS])?");
-      double deg = double.Parse(r.Groups["deg"].Value);
-      double min = double.Parse(r.Groups["min"].Value);
-      double sec = double.Parse(r.Groups["sec"].Value);
+      double deg = double.Parse(r.Groups["deg"].Value, NumberStyles.Any, CultureInfo.InvariantCulture);
+      double min = double.Parse(r.Groups["min"].Value, NumberStyles.Any, CultureInfo.InvariantCulture);
+      double sec = double.Parse(r.Groups["sec"].Value, NumberStyles.Any, CultureInfo.InvariantCulture);
       string s = r.Groups["EWNS"].Value;
       if (s.ToUpper() == "W" || s.ToUpper() == "S")
       {
@@ -88,9 +91,9 @@ namespace MediaPreprocessor.Media
       using (Process myProcess = new Process())
       {
         myProcess.StartInfo.UseShellExecute = false;
-        myProcess.StartInfo.FileName = "/exiftool/exiftool";
+        myProcess.StartInfo.FileName = ExifToolPath;
         myProcess.StartInfo.RedirectStandardOutput = true;
-        myProcess.StartInfo.Arguments = $"-stay_open 0 -overwrite_original {stringBuilder} \"{fileName}\"";
+        myProcess.StartInfo.Arguments = $"-q -q -stay_open 0 -overwrite_original {stringBuilder} \"{fileName}\"";
         myProcess.StartInfo.CreateNoWindow = true;
         if (!myProcess.Start())
         {
@@ -107,40 +110,78 @@ namespace MediaPreprocessor.Media
 
     public static ExifData LoadFromFile(string fileName)
     {
+      int timeout = 1000;
       using (Process myProcess = new Process())
       {
         myProcess.StartInfo.UseShellExecute = false;
-        myProcess.StartInfo.FileName = "/exiftool/exiftool";
+        myProcess.StartInfo.FileName = ExifToolPath;
         myProcess.StartInfo.RedirectStandardOutput = true;
-        myProcess.StartInfo.Arguments = $"-stay_open 0 \"{fileName}\"";
+        myProcess.StartInfo.RedirectStandardError = true;
+        myProcess.StartInfo.Arguments = $"-q -q -stay_open 0 \"{fileName}\"";
         myProcess.StartInfo.CreateNoWindow = true;
-        if (!myProcess.Start())
+
+        StringBuilder output = new StringBuilder();
+        StringBuilder error = new StringBuilder();
+
+        using (AutoResetEvent outputWaitHandle = new AutoResetEvent(false))
+        using (AutoResetEvent errorWaitHandle = new AutoResetEvent(false))
         {
+          myProcess.OutputDataReceived += (sender, e) => {
+            if (e.Data == null)
+            {
+              outputWaitHandle.Set();
+            }
+            else
+            {
+              output.AppendLine(e.Data);
+            }
+          };
+          myProcess.ErrorDataReceived += (sender, e) =>
+          {
+            if (e.Data == null)
+            {
+              errorWaitHandle.Set();
+            }
+            else
+            {
+              error.AppendLine(e.Data);
+            }
+          };
+
+          myProcess.Start();
+
+          myProcess.BeginOutputReadLine();
+          myProcess.BeginErrorReadLine();
+
+          if (myProcess.WaitForExit(timeout) &&
+              outputWaitHandle.WaitOne(timeout) &&
+              errorWaitHandle.WaitOne(timeout))
+          {
+            if (myProcess.ExitCode != 0)
+            {
+              throw new Exception("Cannot read exif data : " + myProcess.StandardOutput.ReadToEnd());
+            }
+
+            var o = output.ToString()
+              .Split(Environment.NewLine, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+              .Select(f =>
+              {
+                int index = f.IndexOf(':');
+                string first = f.Substring(0, index);
+                string second = f.Substring(index + 1);
+                return new[] { first.Trim(), second.Trim() };
+              }).GroupBy(f => f[0]).Select(f => f.First()).ToDictionary(f => f[0], f => f[1]);
+
+            if (!o.Any())
+            {
+              throw new InvalidOperationException();
+            }
+
+            return new ExifData(o);
+          }
+          
           throw new Exception("Cannot find exiftool in path : " + myProcess.StartInfo.FileName);
         }
-
-        myProcess.WaitForExit();
-        if (myProcess.ExitCode != 0)
-        {
-          throw new Exception("Cannot read exif data : " + myProcess.StandardOutput.ReadToEnd());
-        }
-
-        var o = myProcess.StandardOutput.ReadToEnd()
-          .Split(Environment.NewLine, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
-          .Select(f =>
-          {
-            int index = f.IndexOf(':');
-            string first = f.Substring(0, index);
-            string second = f.Substring(index + 1);
-            return new[] {first.Trim(), second.Trim()};
-          }).GroupBy(f=>f[0]).Select(f=>f.First()).ToDictionary(f => f[0], f => f[1]);
-
-        if (!o.Any())
-        {
-          throw new InvalidOperationException();
-        }
-
-        return new ExifData(o);
       }
     } 
   }

@@ -46,7 +46,7 @@ namespace MediaPreprocessor
       builder.RegisterType<Geolocation.Geolocation>().WithParameter("filePath", "/data/geolocation/geolocation.json").SingleInstance().AsImplementedInterfaces();
       builder.RegisterType<Inbox>().WithParameter("sourcePath", new []{ "/data/source"}).AsImplementedInterfaces();
       builder.RegisterType<EventLogFactory>().AsImplementedInterfaces();
-      builder.RegisterType<MediaImporter>().WithParameter("knownFileTypes", new []{"jpg","png","mp4","mts","avi","mkv"}).AsImplementedInterfaces();
+      builder.RegisterType<MediaImporter>().WithParameter("knownFileTypes", new []{"webp","jpeg","jpg","png","mp4","mts","avi","mkv"}).AsImplementedInterfaces();
       builder.RegisterType<GpxPositionsImporter>().AsImplementedInterfaces();
       builder.RegisterType<StopDetection>().AsImplementedInterfaces();
       builder.RegisterType<GoogleTakoutImporter>().AsImplementedInterfaces();

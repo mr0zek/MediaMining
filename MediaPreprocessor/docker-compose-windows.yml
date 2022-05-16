@@ -1,0 +1,27 @@
+version: '3.4'
+
+services:
+  mediapreprocesor:
+    image: mr0zek/mediapreprocessor
+    volumes:
+    - type: bind
+      source: c:/data/source
+      target: /data/source
+    - type: bind
+      source: c:/data/destination
+      target: /data/destination
+    - type: bind
+      source: c:/data/positions
+      target: /data/positions
+    - type: bind
+      source: c:/data/events
+      target: /data/events 
+    - type: bind
+      source: c:/data/geolocation 
+      target: /data/geolocation 
+    - type: bind
+      source: c:/data/eventsLog
+      target: /data/eventsLog 
+    - type: bind
+      source: c:/data/scripts
+      target: /data/scripts

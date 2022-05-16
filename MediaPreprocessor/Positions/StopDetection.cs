@@ -45,7 +45,7 @@ namespace MediaPreprocessor.Positions
 
         return r4;
       }
-      catch (Exception e)
+      catch (Exception)
       {
         return new Tuple<Position, TimeSpan>[] { };
       }

@@ -4,6 +4,7 @@ using System.Linq;
 using MediaPreprocessor.Handlers.ImportHandlers;
 using MediaPreprocessor.Importers.GoogleTakeout;
 using MediaPreprocessor.Positions;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace MediaPreprocessor.Importers
@@ -23,7 +24,8 @@ namespace MediaPreprocessor.Importers
         .Select(f => new Position(f.Lat, f.Lng, f.Date));
     }
 
-    public GoogleTakoutImporter(IPositionsRepository positionsRepository, IPositionsImportHandlerFactory handlerFactory) : base(positionsRepository, handlerFactory)
+    public GoogleTakoutImporter(IPositionsRepository positionsRepository, IPositionsImportHandlerFactory handlerFactory,
+      ILoggerFactory loggerFactory) : base(positionsRepository, handlerFactory, loggerFactory)
     {
     }
   }

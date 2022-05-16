@@ -1,0 +1,47 @@
+﻿{
+  "media": [
+    {
+      "type": "photo",
+      "path": "c:\\samplePath\\toFile.webp",
+      "createdDate": "2022-05-01 23:45",
+      "coordinates": {
+        "lat":"42342",
+        "lon": "564564"
+      }
+    },
+    {
+      "type": "movie",
+      "path": "c:\\samplePath\\toFile.mp4",
+      "createdDate": "2022-05-01 23:45",
+      "coordinates": {
+        "lat":"42342",
+        "lon": "564564"
+      }
+    }
+  ],
+  "route": {
+    "path": "c:\\path\\togeojsonFile.gejson",
+    "tracks": [
+      {
+        "name": "Track from 2022-05-01 00:01",
+        "actionType": "carDriving",
+        "fromDate": "2022-05-01 00:00",
+        "toDate": "2022-05-01 01:00"
+      },
+      {
+        "name": "Track from 2022-06-01 00:01",
+        "actionType": "trekking",
+        "fromDate": "2022-06-01 00:00",
+        "toDate": "2022-06-01 01:00"
+      }
+    ],
+    "stops": [
+      {
+        "name": "Camper Cubis",
+        "country": "Slovakia", 
+        "fromDate": "2022-05-01 00:00",
+        "toDate": "2022-05-01 00:00"
+      }
+    ]
+  }
+}

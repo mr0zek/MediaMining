@@ -32,7 +32,7 @@ namespace MediaPreprocessor.Importers
       foreach (var filePath in _inbox.GetFiles())
       {
         IImporter importer = _importers.FirstOrDefault(f => f.CanImport(filePath));
-
+        
         if (importer == null)
         {
           _log.LogError("Unrecognized media file type", filePath);
@@ -41,7 +41,11 @@ namespace MediaPreprocessor.Importers
         {
           try
           {
+            _log.LogInformation($"Importing: {filePath}");
+
             ISet<Date> dates = importer.Import(filePath);
+            
+            _log.LogInformation($"Imported: {filePath}");
 
             foreach (var date in dates)
             {
@@ -63,13 +67,13 @@ namespace MediaPreprocessor.Importers
         }
       }
 
-      if (changedMediaDate.Count > 0)
-      {
-        foreach (var postImportHandler in _postImportHandlers)
-        {
-          postImportHandler.Handle(changedMediaDate);
-        }
-      }
+      //if (changedMediaDate.Count > 0)
+      //{
+      //  foreach (var postImportHandler in _postImportHandlers)
+      //  {
+      //    postImportHandler.Handle(changedMediaDate);
+      //  }
+      //}
 
       _inbox.Cleanup();
     }

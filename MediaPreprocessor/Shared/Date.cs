@@ -2,6 +2,7 @@
 
 namespace MediaPreprocessor.Shared
 {
+#pragma warning disable 661,660
   public class Date : ValueObject
   {
     private readonly DateTime _value;
@@ -23,7 +24,7 @@ namespace MediaPreprocessor.Shared
       return _value.ToString(format);
     }
 
-    public static Date Parse(string? s)
+    public static Date Parse(string s)
     {
       return new Date(DateTime.Parse(s));
     }

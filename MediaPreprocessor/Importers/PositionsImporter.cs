@@ -4,6 +4,7 @@ using System.Linq;
 using MediaPreprocessor.Handlers.ImportHandlers;
 using MediaPreprocessor.Positions;
 using MediaPreprocessor.Shared;
+using Microsoft.Extensions.Logging;
 
 namespace MediaPreprocessor.Importers
 {
@@ -11,16 +12,21 @@ namespace MediaPreprocessor.Importers
   {
     private readonly IPositionsRepository _positionsRepository; 
     private readonly IEnumerable<IPositionsImportHandler> _handlers;
+    private readonly ILogger _log;
 
-    public PositionsImporter(IPositionsRepository positionsRepository, IPositionsImportHandlerFactory handlersFactory)
+    public PositionsImporter(IPositionsRepository positionsRepository, IPositionsImportHandlerFactory handlersFactory,
+      ILoggerFactory loggerFactory)
     {
       _positionsRepository = positionsRepository;
       _handlers = handlersFactory.Create();
+      _log = loggerFactory.CreateLogger(GetType());
     }
 
     public ISet<Date> Import(string filePath)
     {
       var positions = LoadPositions(filePath).ToArray();
+      _log.LogInformation($"Imported {positions.Length} coordinates");
+
       _positionsRepository.AddRange(positions);
 
       var g = positions.GroupBy(f => new Date(f.Date));

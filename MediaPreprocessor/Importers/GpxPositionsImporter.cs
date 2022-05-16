@@ -4,6 +4,7 @@ using System.Linq;
 using MediaPreprocessor.Handlers.ImportHandlers;
 using MediaPreprocessor.Importers.Gpx;
 using MediaPreprocessor.Positions;
+using Microsoft.Extensions.Logging;
 
 namespace MediaPreprocessor.Importers
 {
@@ -34,7 +35,8 @@ namespace MediaPreprocessor.Importers
     }
 
 
-    public GpxPositionsImporter(IPositionsRepository positionsRepository, IPositionsImportHandlerFactory handlerFactory) : base(positionsRepository, handlerFactory)
+    public GpxPositionsImporter(IPositionsRepository positionsRepository, IPositionsImportHandlerFactory handlerFactory,
+      ILoggerFactory loggerFactory) : base(positionsRepository, handlerFactory, loggerFactory)
     {
     }
   }
