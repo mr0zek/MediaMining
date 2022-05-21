@@ -1,16 +1,17 @@
 ﻿using MediaPreprocessor.Geolocation;
-using MediaPreprocessor.Importers;
-using MediaPreprocessor.Media;
+using Microsoft.Extensions.Logging;
 
-namespace MediaPreprocessor.Handlers.ImportHandlers
+namespace MediaPreprocessor.Handlers.MediaImportHandlers
 {
   public class MediaLocationNameUpdater : IMediaImportHandler
   {
     private readonly IGeolocation _geolocation;
+    private readonly ILogger _log;
 
-    public MediaLocationNameUpdater(IGeolocation geolocation)
+    public MediaLocationNameUpdater(IGeolocation geolocation, ILoggerFactory loggerFactory)
     {
       _geolocation = geolocation;
+      _log = loggerFactory.CreateLogger(GetType());
     }
 
     public void Handle(Media.Media media)
@@ -20,6 +21,7 @@ namespace MediaPreprocessor.Handlers.ImportHandlers
         var location = _geolocation.GetReverseGeolocationData(media.GpsLocation);
         media.LocationName = location.GetLocationName();
         media.Country = location.GetCountry();
+        _log.LogInformation($"Location information updated in file: {media.Path} - {media.LocationName}");
       }
     }
   }

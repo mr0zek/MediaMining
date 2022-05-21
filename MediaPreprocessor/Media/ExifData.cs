@@ -27,7 +27,7 @@ namespace MediaPreprocessor.Media
       string stringDate = data[key];
       stringDate = ReplaceFirst(ReplaceFirst(stringDate, ":", "-"), ":", "-");
 
-      CreatedDate = DateTime.Parse(stringDate);
+      CreatedDate = DateTime.Parse(stringDate).ToUniversalTime().ToLocalTime();//on purpose
 
       // GPSLocation
       if (data.ContainsKey("GPS Latitude") && data.ContainsKey("GPS Longitude"))
@@ -75,8 +75,8 @@ namespace MediaPreprocessor.Media
           $" -gpslongitude={GPSLocation.Longitude.ToString(System.Globalization.CultureInfo.InvariantCulture)}");
       }
 
-      stringBuilder.Append($" -DateTimeOriginal=\"{CreatedDate.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")}\"");
-      stringBuilder.Append($" -FileModifyDate=\"{CreatedDate.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")}\"");
+      stringBuilder.Append($" -DateTimeOriginal=\"{CreatedDate:o}\"");
+      stringBuilder.Append($" -FileModifyDate=\"{CreatedDate:o}\"");
       
       if (LocationName != null)
       {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Newtonsoft.Json;
 
 namespace MediaPreprocessor.Importers.GoogleTakeout
@@ -18,6 +19,6 @@ namespace MediaPreprocessor.Importers.GoogleTakeout
     public double Lng => LongitudeE7 / 10000000;
 
     [JsonIgnore]
-    public DateTime Date => DateTime.Parse(Timestamp).ToLocalTime();
+    public DateTime Date => DateTime.Parse(Timestamp);
   }
 }

@@ -1,4 +1,4 @@
-﻿namespace MediaPreprocessor.Handlers.ImportHandlers
+﻿namespace MediaPreprocessor.Handlers.MediaImportHandlers
 {
   public interface IMediaImportHandler
   {

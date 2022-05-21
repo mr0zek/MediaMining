@@ -71,6 +71,18 @@ namespace MediaPreprocessor.Positions
       return UnitOfLength.Kilometers.ConvertFromMiles(dist);
     }
 
+    public static Position CalculatePositionAtDate(Position p1, Position p2, DateTime date)
+    {
+      var deltaTimeP1P2 = (p2.Date - p1.Date).TotalSeconds;
+      var deltaTimeP1Date = (date - p1.Date).TotalSeconds;
+      var deltaTimeP1DatePercent = deltaTimeP1Date / deltaTimeP1P2;
+
+      var latitude = p1.Latitude + (p2.Latitude - p1.Latitude) * deltaTimeP1DatePercent;
+      var longitude = p1.Longitude + (p2.Longitude - p1.Longitude) * deltaTimeP1DatePercent;
+
+      return new Position(latitude, longitude, date);
+    }
+
     public static Position CalculateCenter(IEnumerable<Position> positions)
     {
       positions = positions.OrderBy(f => f.Date);

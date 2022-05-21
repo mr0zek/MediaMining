@@ -1,5 +1,6 @@
 ﻿using MediaPreprocessor.Geolocation;
 using MediaPreprocessor.Positions;
+using MediaPreprocessor.Positions.StopDetection;
 using MediaPreprocessor.Shared;
 
 namespace MediaPreprocessor.Events.Log
@@ -8,18 +9,18 @@ namespace MediaPreprocessor.Events.Log
   {
     private readonly IPositionsRepository _positionRepository;
     private readonly IGeolocation _geolocation;
-    private readonly IStopDetection _stopDetection;
+    private readonly IStopDetector _stopDetector;
 
-    public EventLogFactory(IPositionsRepository positionRepository, IGeolocation geolocation, IStopDetection stopDetection)
+    public EventLogFactory(IPositionsRepository positionRepository, IGeolocation geolocation, IStopDetector stopDetector)
     {
       _positionRepository = positionRepository;
       _geolocation = geolocation;
-      _stopDetection = stopDetection;
+      _stopDetector = stopDetector;
     }
 
     public EventLog Create(Event Event)
     {
-      EventLog EventLog = new EventLog(Event, _geolocation, _stopDetection);
+      EventLog EventLog = new EventLog(Event, _geolocation, _stopDetector);
       for (Date dt = Event.DateFrom; dt <= Event.DateTo; dt += 1)
       {
         var track = _positionRepository.GetFromDay(dt);

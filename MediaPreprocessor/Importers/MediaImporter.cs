@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using MediaPreprocessor.Handlers.ImportHandlers;
+using MediaPreprocessor.Handlers.MediaImportHandlers;
 using MediaPreprocessor.Media;
 using MediaPreprocessor.Shared;
 using Microsoft.Extensions.Logging;
@@ -14,11 +14,13 @@ namespace MediaPreprocessor.Importers
     private readonly string[] _knownFileTypes;
     private readonly IEnumerable<IMediaImportHandler> _mediaHandlers;
     private readonly IMediaRepository _mediaRepository;
+    private readonly IMediaTypeDetector _mediaTypeDetector;
 
-    public MediaImporter(IMediaRepository mediaRepository, string[] knownFileTypes, IMediaImportHandlerFactory mediaHandlersFactory)
+    public MediaImporter(IMediaRepository mediaRepository, string[] knownFileTypes, IMediaImportHandlerFactory mediaHandlersFactory, IMediaTypeDetector mediaTypeDetector)
     {
       _mediaRepository = mediaRepository;
       _knownFileTypes = knownFileTypes;
+      _mediaTypeDetector = mediaTypeDetector;
       _mediaHandlers = mediaHandlersFactory.Create();
     }
 
@@ -26,7 +28,7 @@ namespace MediaPreprocessor.Importers
     {
       try
       {
-        Media.Media p = Media.Media.FromFile(filePath, MediaId.NewId());
+        Media.Media p = Media.Media.FromFile(filePath, MediaId.NewId(), _mediaTypeDetector.Detect(filePath));
         _mediaRepository.AddToProcess(p); 
 
         foreach (var handler in _mediaHandlers)

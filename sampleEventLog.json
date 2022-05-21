@@ -23,21 +23,21 @@
     "path": "c:\\path\\togeojsonFile.gejson",
     "tracks": [
       {
-        "name": "Track from 2022-05-01 00:01",
         "actionType": "carDriving",
         "fromDate": "2022-05-01 00:00",
-        "toDate": "2022-05-01 01:00"
+        "toDate": "2022-05-01 01:00",
+        "distance": "1234" 
       },
       {
-        "name": "Track from 2022-06-01 00:01",
         "actionType": "trekking",
         "fromDate": "2022-06-01 00:00",
-        "toDate": "2022-06-01 01:00"
+        "toDate": "2022-06-01 01:00",
+        "distance": "1234"
       }
     ],
     "stops": [
       {
-        "name": "Camper Cubis",
+        "locationName": "Camper Cubis",
         "country": "Slovakia", 
         "fromDate": "2022-05-01 00:00",
         "toDate": "2022-05-01 00:00"

@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using Autofac;
-using MediaPreprocessor.Handlers.PostImportHandlers;
 
-namespace MediaPreprocessor.Handlers.ImportHandlers
+namespace MediaPreprocessor.Handlers.PositionImportHandlers
 {
   internal class PositionsImportHandlerFactory : IPositionsImportHandlerFactory
   {

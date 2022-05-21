@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MediaPreprocessor.Handlers.ImportHandlers
+namespace MediaPreprocessor.Handlers.PositionImportHandlers
 {
   internal interface IPositionsImportHandlerFactory
   {

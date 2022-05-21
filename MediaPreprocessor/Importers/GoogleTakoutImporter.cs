@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using MediaPreprocessor.Handlers.ImportHandlers;
+using MediaPreprocessor.Handlers.PositionImportHandlers;
 using MediaPreprocessor.Importers.GoogleTakeout;
 using MediaPreprocessor.Positions;
 using Microsoft.Extensions.Logging;

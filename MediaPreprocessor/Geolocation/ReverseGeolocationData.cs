@@ -14,12 +14,12 @@ namespace MediaPreprocessor.Geolocation
       {
         return Display_Name;
       }
-      if (Address.City != null)
+      if (Address?.City != null)
       {
         return Address.City;
       }
 
-      if (Address.Town != null)
+      if (Address?.Town != null)
       {
         return Address.Town;
       }

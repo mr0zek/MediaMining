@@ -12,11 +12,13 @@ namespace MediaPreprocessor.Media
     private readonly string _basePath;
     private readonly IEventRepository _eventRepository;
     private readonly Dictionary<MediaId, Media> _index = new();
+    private readonly IMediaTypeDetector _mediatypeDetector;
 
-    public MediaRepository(string basePath, IEventRepository eventRepository)
+    public MediaRepository(string basePath, IEventRepository eventRepository, IMediaTypeDetector mediatypeDetector)
     {
       _basePath = basePath;
       _eventRepository = eventRepository;
+      _mediatypeDetector = mediatypeDetector;
     }
 
     public Media Get(MediaId eventMediaId)
@@ -62,7 +64,7 @@ namespace MediaPreprocessor.Media
     {
       List<string> files = new();
 
-      for (Date date = dateFrom; date < dateTo; date += 1)
+      for (Date date = dateFrom; date <= dateTo; date += 1)
       {
         var targetDirectory = Path.Combine(_basePath, dateFrom.ToString("yyyy"));
         Event @event = _eventRepository.GetByDate(date);
@@ -82,7 +84,7 @@ namespace MediaPreprocessor.Media
         }
       }
 
-      var result = files.Select(f => Media.FromFile(f, MediaId.NewId())).ToArray();
+      var result = files.Select(f => Media.FromFile(f, MediaId.NewId(), _mediatypeDetector.Detect(f))).ToArray();
 
       foreach (var media in result)
       {

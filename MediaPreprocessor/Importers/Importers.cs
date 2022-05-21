@@ -29,7 +29,11 @@ namespace MediaPreprocessor.Importers
     {
       HashSet<Date> changedMediaDate = new HashSet<Date>();
 
-      foreach (var filePath in _inbox.GetFiles())
+      var files = _inbox.GetFiles();
+
+      _log.LogInformation($"Processing {files.Count()} files");
+
+      foreach (var filePath in files)
       {
         IImporter importer = _importers.FirstOrDefault(f => f.CanImport(filePath));
         
@@ -67,13 +71,15 @@ namespace MediaPreprocessor.Importers
         }
       }
 
-      //if (changedMediaDate.Count > 0)
-      //{
-      //  foreach (var postImportHandler in _postImportHandlers)
-      //  {
-      //    postImportHandler.Handle(changedMediaDate);
-      //  }
-      //}
+      if (changedMediaDate.Count > 0)
+      {
+        foreach (var postImportHandler in _postImportHandlers)
+        {
+          _log.LogInformation($"Running {postImportHandler.GetType().FullName} handler");
+          postImportHandler.Handle(changedMediaDate);
+          _log.LogInformation($"Finished {postImportHandler.GetType().FullName} handler");
+        }
+      }
 
       _inbox.Cleanup();
     }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Autofac;
 
-namespace MediaPreprocessor.Handlers.ImportHandlers
+namespace MediaPreprocessor.Handlers.MediaImportHandlers
 {
   internal class MediaImportHandlerFactory : IMediaImportHandlerFactory
   {

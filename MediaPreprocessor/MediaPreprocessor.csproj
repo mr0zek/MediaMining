@@ -25,4 +25,9 @@
   <ItemGroup>
     <Folder Include="BaseImageWithExifTool\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="Handlers\PostImportHandlers\EventLogGenerator\Exporters\Reveal\revealTemplate.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

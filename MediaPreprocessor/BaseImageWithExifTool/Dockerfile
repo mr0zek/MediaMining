@@ -14,11 +14,11 @@ RUN apk add --no-cache perl make \
 	&& cd .. \
 	&& rm -rf Image-ExifTool-12.38.tar.gz 
 
-RUN apk add --no-cache perl apk add --no-cache nodejs \
-	&& apk add --no-cache npm
-
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 
 WORKDIR /app
 COPY --from=exifTool /tmp/Image-ExifTool-12.38 /exiftool/
+
+ENV TZ="Europe/Berlin"
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 

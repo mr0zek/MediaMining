@@ -2,17 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MediaPreprocessor.Positions;
+using MediaPreprocessor.Positions.StopDetection;
 using Xunit;
 
-namespace MediaProcessor.Tests
+namespace MediaPreprocessor.Tests.Positions
 {
   public class StopDetectionTests
   {
-    private readonly IStopDetection _sut;
+    private readonly IStopDetector _sut;
 
     public StopDetectionTests()
     {
-      _sut = new StopDetection();
+      _sut = new StopDetector();
     }
 
     [Theory]

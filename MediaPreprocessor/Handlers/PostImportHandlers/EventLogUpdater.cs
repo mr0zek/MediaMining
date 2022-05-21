@@ -32,14 +32,19 @@ namespace MediaPreprocessor.Handlers.PostImportHandlers
 
       string directory = Path.Combine(_basePath, log.Event.GetUniqueName());
       string assetsPath = Path.Combine(directory, "Public","static","blog");
+      Directory.CreateDirectory(assetsPath);
       string mdxPath = Path.Combine(directory, "data","blog");
+      Directory.CreateDirectory(mdxPath);
 
       List<Media.Media> m = new List<Media.Media>();
       foreach (var medium in media)
       {
-        var targetPath = Path.Combine(assetsPath, Path.GetFileName(medium.Path));
-        ResizeImage(medium.Path, targetPath);
-        m.Add(Media.Media.FromFile(targetPath, MediaId.NewId()));
+        if (medium.Type == MediaType.Photo)
+        {
+          var targetPath = Path.Combine(assetsPath, Path.GetFileName(medium.Path));
+          ResizeImage(medium.Path, targetPath);
+          m.Add(Media.Media.FromFile(targetPath, MediaId.NewId(), medium.Type));
+        }
       }
 
       log.WriteToFile(Path.Combine(assetsPath, $"{log.Event.GetUniqueName()}.geojson"));

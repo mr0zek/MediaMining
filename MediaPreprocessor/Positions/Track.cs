@@ -6,6 +6,7 @@ using GeoJSON.Net.Feature;
 using GeoJSON.Net.Geometry;
 using MediaPreprocessor.Events.Log;
 using MediaPreprocessor.Geolocation;
+using MediaPreprocessor.Shared;
 using Newtonsoft.Json;
 
 namespace MediaPreprocessor.Positions
@@ -13,6 +14,8 @@ namespace MediaPreprocessor.Positions
   public class Track
   {
     public IEnumerable<Position> Positions { get; private set; }
+    public DateTime DateFrom => Positions.First().Date;
+    public DateTime DateTo => Positions.Last().Date;
 
     public Track(IEnumerable<Position> positions)
     { 
@@ -43,7 +46,7 @@ namespace MediaPreprocessor.Positions
       int nth = (Positions.Count() / pointsPerDay) + 1;
       var last = Positions.Last();
 
-      var ps2 = Positions.Where((x, i) => i % nth == 0 || x == last);
+      var ps2 = Positions;//.Where((x, i) => i % nth == 0 || x == last);
       
       featureCollection.Features.Add(new Feature(
         new LineString(ps2.Select(f=> new GeoJSON.Net.Geometry.Position(f.Latitude, f.Longitude))), 
@@ -53,8 +56,8 @@ namespace MediaPreprocessor.Positions
         {"stroke-width",5},
         {"stroke-opacity",1},
         {"distance", distance },
-        {"dateFrom", Positions.First().Date.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")},
-        {"dateTo", Positions.Last().Date.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")}
+        {"dateFrom", Positions.First().Date.ToString("o")},
+        {"dateTo", Positions.Last().Date.ToString("o")}
       }));
     }
 
@@ -75,7 +78,7 @@ namespace MediaPreprocessor.Positions
       return distance;
     }
 
-    public static Track Load(string fileName)
+    public static Track Load(FilePath fileName)
     {
       var fc = JsonConvert.DeserializeObject<FeatureCollection>(File.ReadAllText(fileName));
       return new Track(fc.Features.Select(f => new Position(
@@ -104,12 +107,7 @@ namespace MediaPreprocessor.Positions
         {
           if (i > 0)
           {
-            if (Math.Abs((coordinatesFromDay[i].Date - date).TotalSeconds) > Math.Abs((coordinatesFromDay[i - 1].Date - date).TotalSeconds))
-            {
-              return coordinatesFromDay[i - 1];
-            }
-
-            return coordinatesFromDay[i];
+            return Position.CalculatePositionAtDate(coordinatesFromDay[i],coordinatesFromDay[i - 1], date);
           }
 
           return coordinatesFromDay[0];
@@ -124,9 +122,39 @@ namespace MediaPreprocessor.Positions
       var s = JsonConvert.SerializeObject(new FeatureCollection(Positions.Select(f=> new Feature(
         new Point(
           new GeoJSON.Net.Geometry.Position(f.Latitude, f.Longitude)),
-          new { reportTime = f.Date})).ToList()), Formatting.Indented);
+          new { reportTime = f.Date.ToString("o") })).ToList()), Formatting.Indented);
 
       File.WriteAllText(filePath, s);
+    }
+
+    public Track Compact()
+    {
+      List<Tuple<Position, double>> velocity = Positions.SelectWithPrevious((prev, curr) =>
+          new Tuple<Position, double>(curr, prev.DistanceTo(curr) / ((curr.Date - prev.Date).TotalSeconds / 60 / 60)))
+        .ToList();
+
+      int startFrom = 0;
+      for (int i = 0; i < velocity.Count; i++)
+      {
+        if (velocity[i].Item2 > 1.5)
+        {
+          startFrom = i;
+          break;
+        }
+      }
+
+      int endTo = 0;
+      for (int i = velocity.Count-1; i >= 0; i--)
+      {
+        if (velocity[i].Item2 >= 1.5)
+        {
+          break;
+        }
+
+        endTo++;
+      }
+
+      return new Track(Positions.Skip(startFrom - 1).Take(Positions.Count() - (startFrom - 1) - endTo+1));
     }
   }
 }

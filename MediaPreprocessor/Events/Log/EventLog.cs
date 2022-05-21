@@ -6,8 +6,10 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using GeoJSON.Net.Feature;
+using GeoJSON.Net.Geometry;
 using MediaPreprocessor.Geolocation;
 using MediaPreprocessor.Positions;
+using MediaPreprocessor.Positions.StopDetection;
 using MediaPreprocessor.Shared;
 using Newtonsoft.Json;
 
@@ -18,15 +20,15 @@ namespace MediaPreprocessor.Events.Log
     Dictionary<Date, IEnumerable<Stop>> _stops = new();
     readonly Dictionary<Date, Track> _tracksByDay = new();
     private readonly IGeolocation _geolocation;
-    private readonly IStopDetection _stopDetection;
+    private readonly IStopDetector _stopDetector;
     private readonly ISet<string> _visitedCountries = new HashSet<string>();
     private double _distance;
 
-    internal EventLog(Event @event, IGeolocation geolocation, IStopDetection stopDetection)
+    internal EventLog(Event @event, IGeolocation geolocation, IStopDetector stopDetector)
     {
       Event = @event;
       _geolocation = geolocation;
-      _stopDetection = stopDetection;
+      _stopDetector = stopDetector;
     }
 
     public Event Event { get; }
@@ -39,18 +41,10 @@ namespace MediaPreprocessor.Events.Log
     public void PostProcess()
     {
       // Detect Stops
-      _stops = _stopDetection.Detect(_tracksByDay.Values.SelectMany(f => f.Positions))
-        .Select(f =>
-        {
-          var geo = _geolocation.GetReverseGeolocationData(f.Item1);
-          if(geo.GetCountry() != null && !_visitedCountries.Contains(geo.GetCountry()))
-          {
-            _visitedCountries.Add(geo.GetCountry());
-          }
-          return new Stop(geo.GetLocationName(), f.Item1, f.Item2);
-        })
-        .GroupBy(f => new Date(f.Position.Date))
-        .ToDictionary(f => f.Key, f => f as IEnumerable<Stop>);
+      _stops = _stopDetector.Detect(_tracksByDay.Values.SelectMany(f=>f.Positions))
+        .GroupBy(f=>new Date(f.DateFrom))
+        .ToDictionary(f=>new Date(f.Key), f=>f as IEnumerable<Stop>);
+        
       
       // Smooth tracks
 
@@ -109,11 +103,28 @@ namespace MediaPreprocessor.Events.Log
       //Stops
       foreach (var stop in _stops.SelectMany(f => f.Value))
       {
-        stop.WriteTo(fc);
+        WriteStop(stop, fc);
       }
 
       Directory.CreateDirectory(Path.GetDirectoryName(fileName));
       File.WriteAllText(fileName, JsonConvert.SerializeObject(fc, Formatting.Indented));
+    }
+
+    private void WriteStop(Stop stop, FeatureCollection fc)
+    {
+      fc.Features.Add(
+        new Feature(
+          new Point(
+            new GeoJSON.Net.Geometry.Position(stop.Position.Latitude, stop.Position.Longitude)),
+          new Dictionary<string, object>()
+          {
+            { "marker-color", "#ed1d1d" },
+            { "marker-size", "large" },
+            { "marker-symbol", "star" },
+            { "duration", stop.Duration() },
+            { "name", _geolocation.GetReverseGeolocationData(stop.Position).GetLocationName() },
+            { "date", stop.Position.Date.ToString("o") }
+          }));
     }
 
     public void WriteDescription(string fileName, IDictionary<Date, IEnumerable<Media.Media>> media)

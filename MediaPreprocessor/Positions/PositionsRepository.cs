@@ -8,7 +8,7 @@ namespace MediaPreprocessor.Positions
 {
   class PositionsRepository : IPositionsRepository
   {
-    private readonly string _basePath;
+    private readonly DirectoryPath _basePath;
     private readonly IDictionary<string, string> _trackPaths;
     private readonly Dictionary<Date, Track> _positionsByDate = new();
 
@@ -50,15 +50,18 @@ namespace MediaPreprocessor.Positions
           _positionsByDate[p.Key].Merge(new Track(p));
         }
 
-        string filePath = GeneratePositionsPath(p.Key);
-        Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+        FilePath filePath = GeneratePositionsPath(p.Key);
+        filePath.Directory.Create();
         _positionsByDate[p.Key].Write(filePath);
       }
     }
 
     private string GeneratePositionsPath(Date date)
     {
-      return Path.Combine(_basePath, date.Year.ToString(), date.ToString("yyyy-MM"),date.ToString("yyyy-MM-dd")+".geojson");
+      return _basePath
+        .AddDirectory(date.Year.ToString())
+        .AddDirectory(date.ToString("yyyy-MM"))
+        .ToFilePath(date.ToString("yyyy-MM-dd")+".geojson");
     }
 
     public Track GetFromDay(Date date)
@@ -67,7 +70,7 @@ namespace MediaPreprocessor.Positions
 
       if (_positionsByDate.ContainsKey(date))
       {
-        return _positionsByDate[date];
+        return _positionsByDate[date].Compact();
       }
       else
       {

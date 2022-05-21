@@ -1,6 +1,6 @@
 ﻿using MediaPreprocessor.Shared;
 
-namespace MediaPreprocessor.Handlers.ImportHandlers
+namespace MediaPreprocessor.Handlers.PositionImportHandlers
 {
   internal interface IPositionsImportHandler
   {

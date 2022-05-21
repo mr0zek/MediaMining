@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MediaPreprocessor.Positions
+namespace MediaPreprocessor.Positions.StopDetection
 {
-  public class StopDetection : IStopDetection
+  public class StopDetector : IStopDetector
   {
-    public IEnumerable<Tuple<Position, TimeSpan>> Detect(IEnumerable<Position> positions)
+    public IEnumerable<Stop> Detect(IEnumerable<Position> positions)
     {
       try
       {
@@ -35,19 +35,20 @@ namespace MediaPreprocessor.Positions
         }
 
         // calculate central points and duration
-        var r2 = result.Select(f => new Tuple<Position, TimeSpan>(
+        var r2 = result.Select(f => new Stop(
           Position.CalculateCenter(f),
-          f.Last().Date - f.First().Date))
+          f.First().Date,
+          f.Last().Date))
           .ToList();
 
         // filter by time
-        var r4 = r2.Where(f=> f.Item2.TotalMinutes >= 10);
+        var r4 = r2.Where(f=> f.Duration().TotalMinutes >= 10);
 
         return r4;
       }
       catch (Exception)
       {
-        return new Tuple<Position, TimeSpan>[] { };
+        return Array.Empty<Stop>();
       }
     }
   }
