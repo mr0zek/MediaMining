@@ -16,7 +16,7 @@ namespace MediaPreprocessor.Handlers.MediaImportHandlers
 
     public void Handle(Media.Media media)
     {
-      //if(media.GpsLocation == null)
+      if(media.GpsLocation == null)
       {
         media.GpsLocation = _positionsRepository.Get(media.CreatedDate);
         _log.LogInformation($"GPS information updated in file: {media.Path} - lat:{media.GpsLocation.Latitude}, lon:{media.GpsLocation.Longitude}");

@@ -42,9 +42,9 @@ namespace MediaPreprocessor.Shared
       return Path.Combine(_value, fileName);
     }
 
-    public DirectoryPath AddDirectory(string directoryName)
+    public DirectoryPath AddDirectory(params string[] directoryName)
     {
-      return Path.Combine(_value, directoryName);
+      return Path.Combine(_value, Path.Combine(directoryName));
     }
 
     public void Create()

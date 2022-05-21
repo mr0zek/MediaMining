@@ -27,7 +27,7 @@ namespace MediaPreprocessor.Events
       return _events[eventId];
     }
 
-    public void LoadFromPath(string eventsPath)
+    public void LoadFromPath(DirectoryPath eventsPath)
     {
       EventsRoot result = new EventsRoot();
       var files = Directory.GetFiles(eventsPath, "*.json", SearchOption.AllDirectories);

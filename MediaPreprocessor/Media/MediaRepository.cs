@@ -9,7 +9,7 @@ namespace MediaPreprocessor.Media
 {
   class MediaRepository : IMediaRepository
   {
-    private readonly string _basePath;
+    private readonly DirectoryPath _basePath;
     private readonly IEventRepository _eventRepository;
     private readonly Dictionary<MediaId, Media> _index = new();
     private readonly IMediaTypeDetector _mediatypeDetector;
@@ -39,7 +39,7 @@ namespace MediaPreprocessor.Media
 
       if (targetFileName != media.Path)
       {
-        Directory.CreateDirectory(Path.GetDirectoryName(targetFileName));
+        targetFileName.Directory.Create();
         File.Move(media.Path, targetFileName, true);
       }
 
@@ -50,9 +50,9 @@ namespace MediaPreprocessor.Media
 
     public void AddToProcess(Media media)
     {
-      var targetFileName = Path.Combine(_basePath, "Processing", Path.GetFileName(media.Path));
-
-      Directory.CreateDirectory(Path.GetDirectoryName(targetFileName));
+      var targetFileName = _basePath.AddDirectory("Processing").ToFilePath(media.Path.FileName);
+      targetFileName.Directory.Create();
+      
       File.Copy(media.Path, targetFileName, true);
       
       media.Path = targetFileName;
@@ -66,18 +66,18 @@ namespace MediaPreprocessor.Media
 
       for (Date date = dateFrom; date <= dateTo; date += 1)
       {
-        var targetDirectory = Path.Combine(_basePath, dateFrom.ToString("yyyy"));
+        var targetDirectory = _basePath.AddDirectory(dateFrom.ToString("yyyy"));
         Event @event = _eventRepository.GetByDate(date);
         if (@event != null)
         {
-          targetDirectory = Path.Combine(targetDirectory, @event.GetUniqueName());
+          targetDirectory = targetDirectory.AddDirectory(@event.GetUniqueName());
         }
         else
         {
-          targetDirectory = Path.Combine(targetDirectory, date.ToString("yyyy-MM-dd"));
+          targetDirectory = targetDirectory.AddDirectory(date.ToString("yyyy-MM-dd"));
         }
 
-        if (Directory.Exists(targetDirectory))
+        if (targetDirectory.Exists)
         {
           files.AddRange(
             Directory.GetFiles(targetDirectory, "*.*", SearchOption.AllDirectories).Except(files.ToArray()));
@@ -94,25 +94,23 @@ namespace MediaPreprocessor.Media
       return result;
     }
 
-    private string CalculateTargetPath(Media media)
+    private FilePath CalculateTargetPath(Media media)
     {
-      string targetDirectory =
-        Path.Combine(_basePath, media.CreatedDate.ToString("yyyy"), media.CreatedDate.ToString("yyyy-MM-dd"));
+      var targetDirectory = _basePath.AddDirectory(media.CreatedDate.ToString("yyyy"),media.CreatedDate.ToString("yyyy-MM-dd"));
 
       if (media.EventId != null)
       {
         Event ex = _eventRepository.Get(media.EventId);
-        targetDirectory = Path.Combine(_basePath, media.CreatedDate.ToString("yyyy"), ex.GetUniqueName(),
+        targetDirectory = _basePath.AddDirectory(media.CreatedDate.ToString("yyyy"), ex.GetUniqueName(),
           media.CreatedDate.ToString("yyyy-MM-dd"));
       }
 
       if (media.GpsLocation == null)
       {
-        targetDirectory = Path.Combine(targetDirectory, "No-Gps-Location");
+        targetDirectory = targetDirectory.AddDirectory("No-Gps-Location");
       }
 
-      string targetFileName = Path.Combine(targetDirectory, Path.GetFileName(media.Path));
-      return targetFileName;
+      return targetDirectory.ToFilePath(media.Path.FileName);
     }
   }
 }

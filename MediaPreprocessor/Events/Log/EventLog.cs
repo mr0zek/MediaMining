@@ -52,7 +52,7 @@ namespace MediaPreprocessor.Events.Log
       _distance = _tracksByDay.Sum(f => f.Value.CalculateDistance());
     }
 
-    public void WriteToFile(string fileName)
+    public void WriteToFile(FilePath fileName)
     {
       var colors = new string[]
       {
@@ -106,7 +106,8 @@ namespace MediaPreprocessor.Events.Log
         WriteStop(stop, fc);
       }
 
-      Directory.CreateDirectory(Path.GetDirectoryName(fileName));
+      fileName.Directory.Create();
+
       File.WriteAllText(fileName, JsonConvert.SerializeObject(fc, Formatting.Indented));
     }
 
@@ -127,7 +128,7 @@ namespace MediaPreprocessor.Events.Log
           }));
     }
 
-    public void WriteDescription(string fileName, IDictionary<Date, IEnumerable<Media.Media>> media)
+    public void WriteDescription(FilePath fileName, IDictionary<Date, IEnumerable<Media.Media>> media)
     {
       StringBuilder stringBuilder = new StringBuilder();
 
@@ -164,7 +165,7 @@ namespace MediaPreprocessor.Events.Log
         }
       }
 
-      Directory.CreateDirectory(Path.GetDirectoryName(fileName));
+      fileName.Directory.Create();
       File.WriteAllText(fileName, stringBuilder.ToString());
     }
   }
