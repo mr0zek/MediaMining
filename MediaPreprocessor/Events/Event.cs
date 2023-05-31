@@ -31,6 +31,7 @@ namespace MediaPreprocessor.Events
 
     public List<Day> Days { get; set; } = new List<Day>();
 
+    [JsonIgnore]
     public EventId Id
     {
       get
@@ -51,6 +52,11 @@ namespace MediaPreprocessor.Events
 
     public Day GetDay(Date date)
     {
+      if(date < DateFrom || date > DateTo)
+      {
+        throw new ArgumentException(date);
+      }
+
       var d =  Days.FirstOrDefault(f => f.Date == date);
       if (d == null)
       {

@@ -42,7 +42,7 @@ namespace MediaPreprocessor.Geolocation
 
     public ReverseGeolocationResponse GetReverseGeolocationData(Position pos)
     {      
-        var position = pos.Round();
+      var position = pos.Round();
       if (_cache.ContainsKey(position))
       {
         _log.LogDebug($"GetReverseGeolocationData - loaded from cache - {position}");

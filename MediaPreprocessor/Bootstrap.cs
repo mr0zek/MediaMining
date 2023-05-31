@@ -102,6 +102,7 @@ namespace MediaPreprocessor
       builder.RegisterInstance(LoggerFactory.Create(b =>
       {
         b.AddConsole();
+        b.SetMinimumLevel(LogLevel.Debug);
       })).AsImplementedInterfaces();
       builder.RegisterType<Importers.Importers>().AsImplementedInterfaces();
       builder.RegisterType<EventRepository>().WithParameter("eventsPath", events).SingleInstance().AsImplementedInterfaces();

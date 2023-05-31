@@ -1,8 +1,8 @@
 {
   "profiles": {
-    "MediaMining.SortIntoFolders": {
+    "MediaMining.PositionImporter": {
       "commandName": "Project",
-      "commandLineArgs": "c:\\data"
+      "commandLineArgs": "basePath=c:\\data\\"
     }
   }
 }

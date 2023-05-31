@@ -41,13 +41,13 @@ namespace MediaPreprocessor.Events
 
     private string GetFilePath(Event e)
     {
-      return _eventsPath.ToFilePath(e.DateFrom.ToString("yyyy-MM-dd") + " - " + e.Name + ".json");
+      return _eventsPath.ToFilePath(e.DateFrom.ToString("yyyy-MM-dd") + " - " + e.Name + ".event");
     }
 
     public void LoadFromPath(DirectoryPath eventsPath)
     {
       EventsRoot result = new EventsRoot();
-      var files = Directory.GetFiles(eventsPath, "*.json", SearchOption.AllDirectories);
+      var files = Directory.GetFiles(eventsPath, "*.event", SearchOption.AllDirectories);
       foreach (string file in files)
       {
         Event @event = JsonConvert.DeserializeObject<Event>(File.ReadAllText(file), new JsonDateConverter());

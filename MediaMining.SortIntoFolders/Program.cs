@@ -13,9 +13,7 @@ namespace MediaMining.SortIntoFolders
   {
     static void Main(string[] args)
     {
-      ExifData.ExifToolPath = $"{args[0]}\\exiftool\\exiftool.exe";
-
-      new MyBootstrap().Run(args, 1, true);
+      new MyBootstrap().Run(args, 1, false);
     }
   }
 

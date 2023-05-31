@@ -139,6 +139,11 @@ namespace MediaPreprocessor.Shared
       return a.Date != b._value;
     }
 
+    public static Date operator ++(Date a)
+    {
+      return a._value + new TimeSpan(1,0,0,0,0);
+    }
+
     protected override object[] GetValues()
     {
       return new object[] { ToString() };
