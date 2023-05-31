@@ -6,5 +6,7 @@ namespace MediaPreprocessor.Events
   {
     Event GetByDate(Date date);
     Event Get(EventId eventId);
+    void Save();
+    void Add(Event ev);
   }
 }

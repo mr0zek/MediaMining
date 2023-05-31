@@ -2,6 +2,6 @@
 {
   internal interface IImporters
   {
-    void Import();
+    void Import(bool runInParallel);
   }
 }

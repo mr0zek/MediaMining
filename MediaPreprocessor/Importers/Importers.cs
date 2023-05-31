@@ -1,7 +1,8 @@
-﻿using System;
+﻿  using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using MediaPreprocessor.Handlers.PostImportHandlers;
 using MediaPreprocessor.Shared;
 using Microsoft.Extensions.Logging;
@@ -13,75 +14,56 @@ namespace MediaPreprocessor.Importers
     private readonly IEnumerable<IImporter> _importers;
     private readonly ILogger _log;
     private readonly IInbox _inbox;
-    private readonly bool _deleteAfterImport;
-    private readonly IEnumerable<IPostImportHandler> _postImportHandlers;
 
-    public Importers(IEnumerable<IImporter> importers, IInbox inbox, ILoggerFactory loggerFactory, bool deleteAfterImport, IEnumerable<IPostImportHandler> postImportHandlers)
+    public Importers(IEnumerable<IImporter> importers, IInbox inbox, ILoggerFactory loggerFactory)
     {
       _importers = importers;
       _inbox = inbox;
-      _deleteAfterImport = deleteAfterImport;
-      _postImportHandlers = postImportHandlers;
       _log = loggerFactory.CreateLogger<Importers>();
     }
 
-    public void Import()
+    public void Import(bool runInParallel)
     {
-      HashSet<Date> changedMediaDate = new HashSet<Date>();
-
-      var files = _inbox.GetFiles();
+      IEnumerable<string> files = _inbox.GetFiles();
 
       _log.LogInformation($"Processing {files.Count()} files");
 
-      foreach (var filePath in files)
+      int imported = 0;
+      if (runInParallel)
       {
-        IImporter importer = _importers.FirstOrDefault(f => f.CanImport(filePath));
-        
-        if (importer == null)
-        {
-          _log.LogError("Unrecognized media file type", filePath);
-        }
-        else
-        {
-          try
-          {
-            _log.LogInformation($"Importing: {filePath}");
-
-            ISet<Date> dates = importer.Import(filePath);
-            
-            _log.LogInformation($"Imported: {filePath}");
-
-            foreach (var date in dates)
-            {
-              if (!changedMediaDate.Contains(date))
-              {
-                changedMediaDate.Add(date);
-              }
-            }
-
-            if (_deleteAfterImport)
-            {
-              File.Delete(filePath);
-            }
-          }
-          catch (Exception ex)
-          {
-            _log.LogError(ex.ToString());
-          }
-        }
+        Parallel.ForEach(files, f => Process(f, imported++, files.Count()));
       }
-
-      if (changedMediaDate.Count > 0)
+      else
       {
-        foreach (var postImportHandler in _postImportHandlers)
-        {
-          _log.LogInformation($"Running {postImportHandler.GetType().FullName} handler");
-          postImportHandler.Handle(changedMediaDate);
-          _log.LogInformation($"Finished {postImportHandler.GetType().FullName} handler");
-        }
+        files.ToList().ForEach(filePath => Process(filePath,imported++,files.Count()));
       }
 
       _inbox.Cleanup();
+    }
+
+    private void Process(string filePath, int i, int count)
+    {
+      IImporter importer = _importers.FirstOrDefault(f => f.CanImport(filePath));
+
+      if (importer == null)
+      {
+        _log.LogError("Unrecognized media file type", filePath);
+      }
+      else
+      {
+        try
+        {
+          _log.LogInformation($"Importing ({i}/{count}): {filePath}");
+
+          importer.Import(filePath);
+
+          _log.LogInformation($"Imported ({i}/{count}): {filePath}");
+        }
+        catch (Exception ex)
+        {
+          _log.LogError(ex.ToString());
+        }
+      }
     }
   }
 }

@@ -11,8 +11,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaPreprocessor.Tests", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9279A3E4-3AB9-4C5A-8B79-8968F49588CA}"
 	ProjectSection(SolutionItems) = preProject
+		Algorythm.txt = Algorythm.txt
 		sampleEventLog.json = sampleEventLog.json
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaMining.SortIntoFolders", "MediaMining.SortIntoFolders\MediaMining.SortIntoFolders.csproj", "{C78293D5-A49D-43FF-86AC-FAD41617B6D2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaMining.GpsUpdate", "MediaMining.GpsUpdate\MediaMining.GpsUpdate.csproj", "{E5ED702D-7FFC-465B-929C-1EE906F54AAE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaMining.PositionImporter", "MediaMining.PositionImporter\MediaMining.PositionImporter.csproj", "{70D5731C-59DF-4361-BB6E-658F77932E3A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaMining.EventImporter", "MediaMining.EventImporter\MediaMining.EventImporter.csproj", "{FF48F066-B860-41E5-A917-FEB1173C9A96}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +41,22 @@ Global
 		{A70EA542-9A5A-4756-ACBA-976B9B85C70E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A70EA542-9A5A-4756-ACBA-976B9B85C70E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A70EA542-9A5A-4756-ACBA-976B9B85C70E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C78293D5-A49D-43FF-86AC-FAD41617B6D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C78293D5-A49D-43FF-86AC-FAD41617B6D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C78293D5-A49D-43FF-86AC-FAD41617B6D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C78293D5-A49D-43FF-86AC-FAD41617B6D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5ED702D-7FFC-465B-929C-1EE906F54AAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5ED702D-7FFC-465B-929C-1EE906F54AAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5ED702D-7FFC-465B-929C-1EE906F54AAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5ED702D-7FFC-465B-929C-1EE906F54AAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70D5731C-59DF-4361-BB6E-658F77932E3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70D5731C-59DF-4361-BB6E-658F77932E3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70D5731C-59DF-4361-BB6E-658F77932E3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70D5731C-59DF-4361-BB6E-658F77932E3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF48F066-B860-41E5-A917-FEB1173C9A96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF48F066-B860-41E5-A917-FEB1173C9A96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF48F066-B860-41E5-A917-FEB1173C9A96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF48F066-B860-41E5-A917-FEB1173C9A96}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

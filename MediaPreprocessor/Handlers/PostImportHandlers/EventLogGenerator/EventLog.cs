@@ -120,9 +120,9 @@ namespace MediaPreprocessor.Handlers.PostImportHandlers.EventLogGenerator
       return result;
     }
 
-    public IEnumerable<LocationDescription> GetUniqueLocations()
+    public IEnumerable<string> GetUniqueLocations()
     {
-      return Array.Empty<LocationDescription>();
+      return Days.SelectMany(f => f.Stops.Select(f => f.LocationName)).Distinct();
     }
   }
 }

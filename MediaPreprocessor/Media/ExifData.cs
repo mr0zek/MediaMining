@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -21,9 +22,9 @@ namespace MediaPreprocessor.Media
     public ExifData(IDictionary<string, string> data)
     {
       // CreatedDate
-      var dateTagNames = new [] { "Date/Time Original", "Create Date", "File Modification Date/Time" };
-      
-      string key = dateTagNames.First(f=> data.ContainsKey(f) && data[f] != "0000-00-00 00:00:00");
+      var dateTagNames = new[] { "Date/Time Original", "Create Date", "File Modification Date/Time" };
+
+      string key = dateTagNames.First(f => data.ContainsKey(f) && data[f] != "0000-00-00 00:00:00");
       string stringDate = data[key];
       stringDate = ReplaceFirst(ReplaceFirst(stringDate, ":", "-"), ":", "-");
 
@@ -57,7 +58,7 @@ namespace MediaPreprocessor.Media
       string s = r.Groups["EWNS"].Value;
       if (s.ToUpper() == "W" || s.ToUpper() == "S")
       {
-        return - deg + min / 60 + sec / 3600;
+        return -deg + min / 60 + sec / 3600;
       }
 
       return deg + min / 60 + sec / 3600;
@@ -65,7 +66,8 @@ namespace MediaPreprocessor.Media
 
     public void WriteToFile(string fileName)
     {
-      
+      File.SetAttributes(fileName, FileAttributes.Normal);
+
       StringBuilder stringBuilder = new StringBuilder();
       if (GPSLocation != null)
       {
@@ -77,10 +79,10 @@ namespace MediaPreprocessor.Media
 
       stringBuilder.Append($" -DateTimeOriginal=\"{CreatedDate:o}\"");
       stringBuilder.Append($" -FileModifyDate=\"{CreatedDate:o}\"");
-      
+
       if (LocationName != null)
       {
-        stringBuilder.Append($" -LocationName=\"{LocationName.Replace("\"","'")}\"");
+        stringBuilder.Append($" -LocationName=\"{LocationName.Replace("\"", "'")}\"");
       }
 
       if (Country != null)
@@ -106,11 +108,14 @@ namespace MediaPreprocessor.Media
           throw new Exception("Cannot save exif data : " + myProcess.StandardOutput.ReadToEnd());
         }
       }
+
+      File.SetCreationTime(fileName, CreatedDate);
+      File.SetLastWriteTime(fileName, CreatedDate);
     }
 
     public static ExifData LoadFromFile(string fileName)
     {
-      int timeout = 1000;
+      int timeout = 10000000;
       using (Process myProcess = new Process())
       {
         myProcess.StartInfo.UseShellExecute = false;
@@ -126,7 +131,8 @@ namespace MediaPreprocessor.Media
         using (AutoResetEvent outputWaitHandle = new AutoResetEvent(false))
         using (AutoResetEvent errorWaitHandle = new AutoResetEvent(false))
         {
-          myProcess.OutputDataReceived += (sender, e) => {
+          myProcess.OutputDataReceived += (sender, e) =>
+          {
             if (e.Data == null)
             {
               outputWaitHandle.Set();
@@ -149,7 +155,7 @@ namespace MediaPreprocessor.Media
           };
 
           myProcess.Start();
-
+          
           myProcess.BeginOutputReadLine();
           myProcess.BeginErrorReadLine();
 
@@ -159,7 +165,7 @@ namespace MediaPreprocessor.Media
           {
             if (myProcess.ExitCode != 0)
             {
-              throw new Exception("Cannot read exif data : " + myProcess.StandardOutput.ReadToEnd());
+              throw new Exception("Cannot read exif data : " + error);
             }
 
             var o = output.ToString()
@@ -179,12 +185,10 @@ namespace MediaPreprocessor.Media
 
             return new ExifData(o);
           }
-          
-          throw new Exception("Cannot find exiftool in path : " + myProcess.StartInfo.FileName);
+
+          throw new Exception("Cannot find exiftool in path : " + myProcess.StartInfo.FileName + ", " + error.ToString());
         }
       }
-    } 
+    }
   }
-
-  
 }

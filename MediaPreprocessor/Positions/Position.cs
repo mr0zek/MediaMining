@@ -106,5 +106,10 @@ namespace MediaPreprocessor.Positions
     {
       return new object[] {Latitude, Longitude};
     }
+
+    public Position Round()
+    {
+      return new Position(Math.Round(Latitude, 4), Math.Round(Longitude, 4), Date);
+    }
   }
 }

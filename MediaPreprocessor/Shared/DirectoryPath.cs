@@ -59,5 +59,16 @@ namespace MediaPreprocessor.Shared
     {
       return basePath;
     }
+
+    public void DeleteAllInside()
+    {
+      Delete();
+      Create();
+    }
+
+    private void Delete()
+    {
+      Directory.Delete(_value,true);
+    }
   }
 }

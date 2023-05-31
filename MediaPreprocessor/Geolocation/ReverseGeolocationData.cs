@@ -1,18 +1,24 @@
-﻿using MediaPreprocessor.Positions;
+﻿using System;
+using MediaPreprocessor.Positions;
 
 namespace MediaPreprocessor.Geolocation
 {
-  public class ReverseGeolocationData
+  internal class ReverseGeolocationData
   {
-    public Position Position { get; set; }
+    public double Lat { get; set; }
+    public double Lon { get; set; }
+    public string Osm_type { get; set; }
+    public Position GetPosition() => new Position(Lat, Lon, DateTime.MaxValue);
+
     public string Display_Name { get; set; }
     public Address Address { get; set; }
-
+    public string Raw { get; set; }
+    
     public string GetLocationName()
     {
-      if (Display_Name != null)
+      if (Address?.Village != null)
       {
-        return Display_Name;
+        return Address.Village;
       }
       if (Address?.City != null)
       {
@@ -22,6 +28,11 @@ namespace MediaPreprocessor.Geolocation
       if (Address?.Town != null)
       {
         return Address.Town;
+      }
+
+      if (Address?.Tourism != null)
+      {
+        return Address.Tourism;
       }
 
       return null;

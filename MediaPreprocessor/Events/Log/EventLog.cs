@@ -113,6 +113,7 @@ namespace MediaPreprocessor.Events.Log
 
     private void WriteStop(Stop stop, FeatureCollection fc)
     {
+      var data = _geolocation.GetReverseGeolocationData(stop.Position);
       fc.Features.Add(
         new Feature(
           new Point(
@@ -123,7 +124,7 @@ namespace MediaPreprocessor.Events.Log
             { "marker-size", "large" },
             { "marker-symbol", "star" },
             { "duration", stop.Duration() },
-            { "name", _geolocation.GetReverseGeolocationData(stop.Position).GetLocationName() },
+            { "name", data.LocationName },
             { "date", stop.Position.Date.ToString("o") }
           }));
     }
@@ -152,7 +153,7 @@ namespace MediaPreprocessor.Events.Log
           foreach (var stop in _stops[day])
           {
             stringBuilder.AppendLine(
-              $"- {stop.Position.Date:t} - {_geolocation.GetReverseGeolocationData(stop.Position).GetLocationName()}");
+              $"- {stop.Position.Date:t} - {_geolocation.GetReverseGeolocationData(stop.Position).LocationName }");
           }
         }
 

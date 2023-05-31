@@ -1,13 +1,36 @@
-﻿using MediaPreprocessor.Shared;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using MediaPreprocessor.Shared;
+using Newtonsoft.Json;
 
 namespace MediaPreprocessor.Events
 {
   public class Event
   {
+    [JsonProperty("DateFrom")]
+    private string _dateFrom;
+    [JsonProperty("DateTo")]
+    private string _dateTo;
     public string Name { get; set; }
-    public Date DateFrom { get; set; }
-    public Date DateTo { get; set; }
-    
+
+    [JsonIgnore]
+    public Date DateFrom
+    {
+      get => _dateFrom;
+      set => _dateFrom = value;
+    }
+
+    [JsonIgnore]
+    public Date DateTo
+    {
+      get => _dateTo;
+      set => _dateTo = value;
+    }
+
+    public List<Day> Days { get; set; } = new List<Day>();
+
     public EventId Id
     {
       get
@@ -24,6 +47,37 @@ namespace MediaPreprocessor.Events
     public string GetUniqueName()
     {
       return $"{DateFrom} - {Name}";
+    }
+
+    public Day GetDay(Date date)
+    {
+      var d =  Days.FirstOrDefault(f => f.Date == date);
+      if (d == null)
+      {
+        Days.Add(d = new Day(){Date = date});
+      }
+
+      return d;
+    }
+
+    internal void Merge(Event ev)
+    {
+      if (ev.Name != null)
+      {
+        Name = ev.Name;
+      }
+      if (ev.DateFrom != DateTime.MinValue)
+      {
+        DateFrom = ev.DateFrom;
+      }
+      if (ev.DateTo != DateTime.MinValue)
+      {
+        DateTo = ev.DateTo;
+      }
+      if (ev.Days.Count() > 0)
+      {
+        Days = ev.Days;
+      }
     }
   }
 }

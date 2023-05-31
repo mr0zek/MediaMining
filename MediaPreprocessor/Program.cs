@@ -20,7 +20,7 @@ namespace MediaPreprocessor
     {
       while (true)
       {
-        new Bootstrap().Run();
+        new Bootstrap().Run(args);
       }
     }
   }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using MediaPreprocessor.Positions.StopDetection;
 using MediaPreprocessor.Shared;
 
 namespace MediaPreprocessor.Handlers.PostImportHandlers.EventLogGenerator
@@ -9,9 +10,10 @@ namespace MediaPreprocessor.Handlers.PostImportHandlers.EventLogGenerator
   {
     public DateTime Date { get; set; }
 
+    public IList<MediaDescription> Media { get; set; } = new List<MediaDescription>();
+
     public IList<TrackDescription> Tracks { get; set; } = new List<TrackDescription>();
     public IList<StopDescription> Stops { get; set; } = new List<StopDescription>();
-    public IList<LocationDescription> Locations { get; set; } = new List<LocationDescription>();
 
     public DayDescription(Date date)
     {
@@ -21,11 +23,11 @@ namespace MediaPreprocessor.Handlers.PostImportHandlers.EventLogGenerator
     public IEnumerable<string> GetVisitedCountries()
     {
       HashSet<string> result = new ();
-      foreach (var location in Locations)
+      foreach (var stop in Stops)
       {
-        if (!result.Contains(location.Country))
+        if (!result.Contains(stop.Country))
         {
-          result.Add(location.Country);
+          result.Add(stop.Country);
         }
       }
 
@@ -46,11 +48,11 @@ namespace MediaPreprocessor.Handlers.PostImportHandlers.EventLogGenerator
     public IEnumerable<string> GetVisitedPlaces()
     {
       HashSet<string> result = new();
-      foreach (var location in Locations)
+      foreach (var stop in Stops)
       {
-        if (!result.Contains(location.Name))
+        if (!result.Contains(stop.LocationName))
         {
-          result.Add(location.Name);
+          result.Add(stop.LocationName);
         }
       }
 
@@ -59,22 +61,11 @@ namespace MediaPreprocessor.Handlers.PostImportHandlers.EventLogGenerator
 
     public void AddMedia(MediaDescription mediaDescription)
     {
-      foreach (var location in Locations)
-      {
-        if (location.CanBeAssigned(mediaDescription.Coordinates))
-        {
-          location.Media.Add(mediaDescription);
-          return;
-        }
-      }
-
-      //throw new InvalidOperationException($"Cannot assign media: {mediaDescription.Path} to location");
+      Media.Add(mediaDescription);
     }
 
     public void AddStop(StopDescription stop)
     {
-      Locations.Add(new LocationDescription(stop.Coordinates, stop.LocationName, stop.Country, stop.DateFrom,
-        stop.DateTo));
       Stops.Add(stop);
     }
   }

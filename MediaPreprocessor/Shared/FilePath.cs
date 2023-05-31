@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,14 +8,19 @@ namespace MediaPreprocessor.Shared
 {
   public class FilePath : ValueObject
   {
-    private readonly string _value;
+    private string _value;
 
     protected FilePath(string path)
     {
       _value = path;
     }
 
-    public DirectoryPath Directory => System.IO.Path.GetDirectoryName(_value);
+    public DirectoryPath Directory
+    {
+      get => System.IO.Path.GetDirectoryName(_value);
+      set => _value = _value.Replace(System.IO.Path.GetDirectoryName(_value), value);
+    }
+
     public string FileName => System.IO.Path.GetFileName(_value);
     public bool Exists => System.IO.File.Exists(_value);
     public string Extension => System.IO.Path.GetExtension(_value);
@@ -23,6 +29,11 @@ namespace MediaPreprocessor.Shared
     protected override object[] GetValues()
     {
       return new[] { _value };
+    }
+
+    public void DeleteFile()
+    {
+      System.IO.File.Delete(_value);
     }
 
     public override string ToString()
@@ -38,6 +49,11 @@ namespace MediaPreprocessor.Shared
     public static implicit operator FilePath(string path)
     {
       return new FilePath(path);
+    }
+
+    public bool Contains(string pathPart)
+    {
+      return _value.Contains(pathPart);
     }
   }
 }

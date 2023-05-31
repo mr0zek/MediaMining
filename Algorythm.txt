@@ -1,0 +1,5 @@
+1. Sortowanie plików po katalogach
+2. Import korynat gpx do bazy
+3. Weryfikacja koordynat GPS i wygenerowanie pliku z opisami dni + opisy folderów
+3. Usuniêcie niepotrzebnych plików, dociêcie filmów ect.
+4. Wygenerowanie prezentacji / strony

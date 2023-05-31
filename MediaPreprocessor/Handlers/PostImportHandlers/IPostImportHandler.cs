@@ -3,7 +3,7 @@ using MediaPreprocessor.Shared;
 
 namespace MediaPreprocessor.Handlers.PostImportHandlers
 {
-  internal interface IPostImportHandler
+  public interface IPostImportHandler
   {
     void Handle(ISet<Date> changedMediaDate);
   }

@@ -39,6 +39,16 @@ namespace MediaPreprocessor.Shared
       return date._value;
     }
 
+    public static implicit operator Date(string dateTime)
+    {
+      return Parse(dateTime);
+    }
+
+    public static implicit operator string(Date date)
+    {
+      return date.ToString();
+    }
+
     public static bool operator > (Date a, Date b)
     {
       return a._value > b._value;
@@ -116,7 +126,7 @@ namespace MediaPreprocessor.Shared
 
     public static bool operator !=(Date a, DateTime b)
     {
-      return a._value == b.Date;
+      return a._value != b.Date;
     }
 
     public static bool operator ==(DateTime a, Date b)
@@ -126,7 +136,7 @@ namespace MediaPreprocessor.Shared
 
     public static bool operator !=(DateTime a, Date b)
     {
-      return a.Date == b._value;
+      return a.Date != b._value;
     }
 
     protected override object[] GetValues()

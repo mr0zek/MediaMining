@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MediaPreprocessor.Handlers.MediaImportHandlers
 {
-  public class MediaLocationNameUpdater : IMediaImportHandler
+  public class MediaLocationNameUpdater 
   {
     private readonly IGeolocation _geolocation;
     private readonly ILogger _log;
@@ -19,8 +19,8 @@ namespace MediaPreprocessor.Handlers.MediaImportHandlers
       if (media.GpsLocation != null && media.LocationName == null)
       {
         var location = _geolocation.GetReverseGeolocationData(media.GpsLocation);
-        media.LocationName = location.GetLocationName();
-        media.Country = location.GetCountry();
+        media.LocationName = location.LocationName;
+        media.Country = location.Country;
         _log.LogInformation($"Location information updated in file: {media.Path} - {media.LocationName}");
       }
     }

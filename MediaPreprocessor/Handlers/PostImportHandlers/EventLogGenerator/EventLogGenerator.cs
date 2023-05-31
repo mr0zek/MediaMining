@@ -23,7 +23,6 @@ namespace MediaPreprocessor.Handlers.PostImportHandlers.EventLogGenerator
   {
     private readonly IEventRepository _eventsRepository;
     private readonly DirectoryPath _basePath;
-    private readonly IMediaRepository _mediaRepository;
     private readonly IGeolocation _geolocation;
     private readonly IStopDetector _stopDetector;
     private readonly IActivityTypeDetector _activityTypeDetector;
@@ -32,7 +31,6 @@ namespace MediaPreprocessor.Handlers.PostImportHandlers.EventLogGenerator
     public EventLogGenerator(
       IEventRepository eventsRepository, 
       string basePath, 
-      IMediaRepository mediaRepository, 
       IGeolocation geolocation,
       IStopDetector stopDetector, 
       IPositionsRepository positionRepository, 
@@ -40,7 +38,6 @@ namespace MediaPreprocessor.Handlers.PostImportHandlers.EventLogGenerator
     {
       _eventsRepository = eventsRepository;
       _basePath = basePath;
-      _mediaRepository = mediaRepository;
       _geolocation = geolocation;
       _stopDetector = stopDetector;
       _positionRepository = positionRepository;
@@ -136,7 +133,7 @@ namespace MediaPreprocessor.Handlers.PostImportHandlers.EventLogGenerator
 
     private IEnumerable<Media.Media> LoadMedia(Event @event)
     {
-      return _mediaRepository.GetAll(@event.DateFrom, @event.DateTo);
+      throw new NotImplementedException();
     }
 
     private void WriteRouteToFile(IDictionary<Date, Track> tracks,
@@ -187,13 +184,14 @@ namespace MediaPreprocessor.Handlers.PostImportHandlers.EventLogGenerator
       foreach (var track in tracks.OrderBy(f => f.Key).Select(f => f.Value))
       {
         track.Compact().WriteAsTrack(fc, colors[colorIndex % colors.Length]);
+        WriteStartStop(track, fc);
         colorIndex++;
       }
 
-      foreach (var stop in stops.SelectMany(f => f.Value))
-      {
-        WriteStop(stop,fc);
-      }
+      //foreach (var stop in stops.SelectMany(f => f.Value))
+      //{
+      //  WriteStop(stop,fc);
+      //}
 
       foreach (var medium in media)
       {
@@ -203,6 +201,40 @@ namespace MediaPreprocessor.Handlers.PostImportHandlers.EventLogGenerator
       filePath.Directory.Create();
 
       System.IO.File.WriteAllText(filePath, JsonConvert.SerializeObject(fc, Formatting.Indented));
+    }
+
+    private void WriteStartStop(Track track, FeatureCollection fc)
+    {
+      var data = _geolocation.GetReverseGeolocationData(track.Positions.First());
+
+      fc.Features.Add(
+        new Feature(
+          new Point(
+            new GeoJSON.Net.Geometry.Position(track.Positions.First().Latitude, track.Positions.First().Longitude)),
+          new Dictionary<string, object>()
+          {
+            { "marker-color", "#ed1d1d" },
+            { "marker-size", "large" },
+            { "name", data.LocationName },
+            { "country", data.Country },
+            { "date", track.Positions.First().Date.ToString("o") }
+          }));
+
+      var data2 = _geolocation.GetReverseGeolocationData(track.Positions.Last());
+
+      fc.Features.Add(
+        new Feature(
+          new Point(
+            new GeoJSON.Net.Geometry.Position(track.Positions.Last().Latitude, track.Positions.Last().Longitude)),
+          new Dictionary<string, object>()
+          {
+            { "marker-color", "#ed1d1d" },
+            { "marker-size", "large" },
+            { "marker-symbol", "cinema" },
+            { "name", data2.LocationName },
+            { "country", data2.Country },
+            { "date", track.Positions.Last().Date.ToString("o") }
+          }));
     }
 
     private void WriteMedia(Media.Media medium, FeatureCollection fc)
@@ -222,24 +254,10 @@ namespace MediaPreprocessor.Handlers.PostImportHandlers.EventLogGenerator
           }));
     }
 
-    private void WriteLocation(LocationDescription location, FeatureCollection fc)
-    {
-      fc.Features.Add(
-        new Feature(
-          new Point(
-            new GeoJSON.Net.Geometry.Position(location.Coordinates.Lat, location.Coordinates.Lon)),
-          new Dictionary<string, string>()
-          {
-            { "marker-color", "#ed1d1d" },
-            { "marker-size", "large" },
-            { "marker-symbol", "cinema" },
-            { "name", _geolocation.GetReverseGeolocationData(new Position(location.Coordinates.Lat, location.Coordinates.Lon, DateTime.MaxValue)).GetLocationName() },
-            { "date", location.DateFrom.ToString("o") }
-          }));
-    }
-
     private void WriteStop(Stop stop, FeatureCollection fc)
     {
+      var data = _geolocation.GetReverseGeolocationData(stop.Position);
+
       fc.Features.Add(
         new Feature(
           new Point(
@@ -250,7 +268,8 @@ namespace MediaPreprocessor.Handlers.PostImportHandlers.EventLogGenerator
             { "marker-size", "large" },
             { "marker-symbol", "star" },
             { "duration", stop.Duration() },
-            { "name", _geolocation.GetReverseGeolocationData(stop.Position).GetLocationName() },
+            { "name", data.LocationName },
+            { "country", data.Country },
             { "dateFrom", stop.DateFrom.ToString("o") },
             { "dateTo", stop.DateTo.ToString("o") }
           }));
@@ -265,8 +284,8 @@ namespace MediaPreprocessor.Handlers.PostImportHandlers.EventLogGenerator
           var geo = _geolocation.GetReverseGeolocationData(f.Position);
           return new StopDescription(
             new CoordinatesDescription(f.Position.Latitude, f.Position.Longitude),
-            geo.GetLocationName(),
-            geo.GetCountry(),
+            geo.LocationName,
+            geo.Country,
             f.DateFrom,
             f.DateTo);
         });

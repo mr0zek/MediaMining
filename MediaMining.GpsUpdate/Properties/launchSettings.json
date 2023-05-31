@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MediaMining.GpsUpdate": {
+      "commandName": "Project",
+      "commandLineArgs": "c:\\data"
+    }
+  }
+}

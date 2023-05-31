@@ -4,6 +4,6 @@ namespace MediaPreprocessor.Geolocation
 {
   public interface IGeolocation
   {
-    ReverseGeolocationData GetReverseGeolocationData(Position position);
+    ReverseGeolocationResponse GetReverseGeolocationData(Position position);
   }
 }

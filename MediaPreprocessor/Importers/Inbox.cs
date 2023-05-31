@@ -44,6 +44,10 @@ namespace MediaPreprocessor.Importers
         {
           if (RemoveEmptyFoldersFromSource(directory))
           {
+            if(Directory.Exists(directory))
+            {
+              File.SetAttributes(directory, FileAttributes.Normal);
+            }
             Directory.Delete(directory);
           }
         }

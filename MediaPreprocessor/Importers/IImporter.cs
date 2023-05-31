@@ -5,7 +5,7 @@ namespace MediaPreprocessor.Importers
 {
   public interface IImporter
   {
-    ISet<Date> Import(string filePath);
-    bool CanImport(string filePath);
+    void Import(FilePath filePath);
+    bool CanImport(FilePath filePath);
   }
 }

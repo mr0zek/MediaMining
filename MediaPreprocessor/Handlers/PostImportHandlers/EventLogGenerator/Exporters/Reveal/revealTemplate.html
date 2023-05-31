@@ -27,9 +27,10 @@
   <!-- Theme used for syntax highlighted code -->
   <link rel="stylesheet" href="plugin/highlight/monokai.css">
   <link rel="stylesheet" href="site.css">
+  <script src="main.js"></script>
 </head>
 <body>
-  <audio id="music" autoplay>
+  <!--<audio id="music" autoplay>
     <source src="assets/bensound-energy.mp3" type="audio/mp3">
     Your browser does not support the audio element.
   </audio>
@@ -37,36 +38,114 @@
     <div class="slides">
       @slides@
     </div>
-  </div>
+  </div>-->
 
   <script src="dist/reveal.js"></script>
   <script src="plugin/notes/notes.js"></script>
   <script src="plugin/markdown/markdown.js"></script>
   <script src="plugin/highlight/highlight.js"></script>
-  <script>// More info about initialization & config:
-			// - https://revealjs.com/initialization/
-			// - https://revealjs.com/config/
-			Reveal.initialize({
-				hash: true,
-				autoSlide: 2000,
-				loop: false,
-				autoSlideStoppable: true,
-				// Learn about plugins: https://revealjs.com/plugins/
-				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
-			});
-			Reveal.on( 'autoslideresumed', event => {
+  <script>
+  // More info about initialization & config:
+    // - https://revealjs.com/initialization/
+    // - https://revealjs.com/config/
+    Reveal.initialize({
+      hash: true,
+      //autoSlide: 2000,
+      loop: false,
+      //autoSlideStoppable: true,
+      // Learn about plugins: https://revealjs.com/plugins/
+      plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+    });
+    // Reveal.on( 'autoslideresumed', event => {
 
-				var x = document.getElementById("music");
-				x.play();
-			});
-			Reveal.on( 'autoslidepaused', event => {
-				var x = document.getElementById("music");
-				x.pause();
-			});
-			Reveal.addEventListener( 'stats', function() {
-				var x = document.getElementById("music");
-				x.load();
-				x.play();
-			} );</script>
+    // 	var x = document.getElementById("music");
+    // 	x.play();
+    // });
+    // Reveal.on( 'autoslidepaused', event => {
+    // 	var x = document.getElementById("music");
+    // 	x.pause();
+    // });
+    // Reveal.addEventListener( 'stats', function() {
+    // 	var x = document.getElementById("music");
+    // 	x.load();
+    // 	x.play();
+    // } );
+
+    L.Map.addInitHook(function () {
+      var slides = document.querySelector('.slides'),
+        zoom = Number(slides.style.zoom);
+
+      if (!zoom) {
+        zoom = Number(slides.style.transform.replace(/.*scale\(([0-9\.]+)\).*/, '$1'));
+      }
+
+      this._container.style.zoom = 1 / zoom;
+      this.invalidateSize();
+    });
+
+    let maps = {}
+
+    function createMap(id, date) {
+      maps[id] = L.map(id);
+
+      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(maps[id]);
+
+      var geojsonLayer = L.geoJson(null, {
+        pointToLayer: function (geoJsonPoint, latlng) {
+          let name = geoJsonPoint.properties.name + ', ' + geoJsonPoint.properties.country
+          var marker = L.marker(latlng, {
+            icon: new L.DivIcon({
+              className: 'my-div-icon',
+              html: '<img src="https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png" class="leaflet-marker-icon" tabindex="0" style="margin-left: -12px; margin-top: -41px; width: 25px; height: 41px; transform: translate3d(6px, 6px, 0px); z-index: 76; outline: none;">' +
+                '<div class="leaflet-tooltip leaflet-zoom-animated leaflet-tooltip-right" style="transform: translate3d(10px, -38px, 0px); z-index:100; opacity: 0.9;">' + name + '</div>'
+            })
+          })
+
+          return marker;
+        }
+      });
+
+      geojsonLayer
+        // .bindTooltip(function (layer) {
+        //   return layer.feature.properties.name +", "+layer.feature.properties.country;
+        // })
+        .addTo(maps[id]);
+
+
+
+      $.ajax({
+        dataType: "json",
+        url: "assets/map.geojson",
+        success: function (data) {
+          $(data.features).each(function (key, data) {
+            let m = maps[id]
+            var d;
+            if (data.properties.dateFrom != undefined) {
+              d = new Date(data.properties.dateFrom)
+            }
+            else {
+              d = new Date(data.properties.date)
+            }
+            if (getDateWithoutTime(d).getTime() == new Date(date).getTime()) {
+              geojsonLayer.addData(data);
+              var bounds = geojsonLayer.getBounds();
+              m.fitBounds(bounds);
+              m.setZoom(m.getZoom() - 1)
+            }
+          });
+        }
+      }).error(function () { });
+    }
+
+    $(function () {
+      $(".map").each(function (key, data) {
+        let date = $(data).data("date")
+        let id = $(data).attr("id")
+        createMap(id, date)
+      });
+    });
+  </script>
 </body>
 </html>

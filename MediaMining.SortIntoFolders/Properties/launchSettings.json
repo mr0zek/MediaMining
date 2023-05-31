@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MediaMining.SortIntoFolders": {
+      "commandName": "Project",
+      "commandLineArgs": "c:\\data"
+    }
+  }
+}
