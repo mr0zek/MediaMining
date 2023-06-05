@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using MediaMining.PositionImporter.GoogleTakeout;
+using MediaPreprocessor.Directions;
 using MediaPreprocessor.Positions;
 using MediaPreprocessor.Shared;
 using Microsoft.Extensions.Logging;
@@ -24,8 +25,26 @@ namespace MediaMining.PositionImporter
         .Select(f => new Position(f.Lat, f.Lng, f.Date));
     }
 
-    public GoogleTakoutImporter(IPositionsRepository positionsRepository, 
-      ILoggerFactory loggerFactory) : base(positionsRepository, loggerFactory)
+    public override Position[] LoadFromDirections(Position[] positions)
+    {
+      List<Position> result = new List<Position>(positions); 
+      Position prevPosition = positions.First();
+      foreach (var position in positions)
+      {
+        if (prevPosition.DistanceTo(position) > 1)
+        {
+          result.AddRange(_directions.GetDirections(prevPosition, position).Positions);          
+        }
+        prevPosition = position;
+      }
+
+      return result.ToArray();
+    }
+
+    public GoogleTakoutImporter(
+      IPositionsRepository positionsRepository, 
+      IDirectionsProvider directionsPrivider,
+      ILoggerFactory loggerFactory) : base(positionsRepository, directionsPrivider, loggerFactory)
     {
     }
   }

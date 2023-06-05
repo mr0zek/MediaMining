@@ -13,52 +13,32 @@ namespace MediaPreprocessor.Positions
 {
   public class Track
   {
-    public IEnumerable<Position> Positions { get; private set; }
+    private bool _dirty = false;
+    private List<Position> _positions = new List<Position>();
+    public IEnumerable<Position> Positions
+    {
+      get
+      {
+        if (_dirty)
+        {
+          _positions = _positions.OrderBy(f => f.Date).ToList();
+          _dirty = false;
+        }
+        return _positions;
+      }
+    }
+
     public DateTime DateFrom => Positions.First().Date;
     public DateTime DateTo => Positions.Last().Date;
 
     public Track(IEnumerable<Position> positions)
     { 
-      Positions = positions.OrderBy(f=>f.Date).ToList();
+      _positions = positions.ToList();
+      _dirty = true;
     }
 
     public Track() : this(new List<Position>())
     {
-    }
-
-    public void WriteAsTrack(FeatureCollection featureCollection, string color)
-    {
-      Random random = new Random();
-
-      if (Positions.Count() < 2)
-      {
-        return;
-      }
-     
-      var distance = CalculateDistance();
-      if (distance < 1)
-      {
-        return;
-      }
-
-
-      int pointsPerDay = 2 * (int)distance; // 2 points per km
-      int nth = (Positions.Count() / pointsPerDay) + 1;
-      var last = Positions.Last();
-
-      var ps2 = Positions;//.Where((x, i) => i % nth == 0 || x == last);
-      
-      featureCollection.Features.Add(new Feature(
-        new LineString(ps2.Select(f=> new GeoJSON.Net.Geometry.Position(f.Latitude, f.Longitude))), 
-        new Dictionary<string, object>()
-      {        
-        {"stroke",color},
-        {"stroke-width",5},
-        {"stroke-opacity",1},
-        {"distance", distance },
-        {"dateFrom", Positions.First().Date.ToString("o")},
-        {"dateTo", Positions.Last().Date.ToString("o")}
-      }));
     }
 
     public double CalculateDistance()
@@ -89,8 +69,9 @@ namespace MediaPreprocessor.Positions
 
     internal void Merge(Track track)
     {
-      IEnumerable<Position> x = track.Positions.Except(Positions).ToList();
-      Positions = Positions.Concat(x).OrderBy(f=>f.Date);
+      IEnumerable<Position> x = track.Positions.Except(Positions, new Position.PositionWithDateComparer()).ToList();
+      _positions = _positions.Concat(x).ToList();
+      _dirty = true;
     }
 
     public Position FindClosest(DateTime date)
@@ -115,17 +96,7 @@ namespace MediaPreprocessor.Positions
       }
 
       return coordinatesFromDay.Last();
-    }
-
-    public void Write(string filePath)
-    {
-      var s = JsonConvert.SerializeObject(new FeatureCollection(Positions.Select(f=> new Feature(
-        new Point(
-          new GeoJSON.Net.Geometry.Position(f.Latitude, f.Longitude)),
-          new { reportTime = f.Date.ToString("o") })).ToList()), Formatting.Indented);
-
-      File.WriteAllText(filePath, s);
-    }
+    }    
 
     public Track Compact()
     {
@@ -155,6 +126,12 @@ namespace MediaPreprocessor.Positions
       }
 
       return new Track(Positions.Skip(startFrom - 1).Take(Positions.Count() - (startFrom - 1) - endTo+1));
+    }
+
+    internal void Add(Position position)
+    {
+      _positions = Positions.Concat(new Position[] {position}).OrderBy(f => f.Date).ToList();
+      _dirty = true;
     }
   }
 }

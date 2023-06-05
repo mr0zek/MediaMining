@@ -19,16 +19,6 @@ namespace MediaPreprocessor.Events
       set => _date = value;
     }
 
-    public List<Country> Countries { get; set; }=new List<Country>();
-
-    public bool HasCountry(string country)
-    {
-      return Countries.Any(f=>f.Name == country);
-    }
-
-    public Country GetCountry(string country)
-    {
-      return Countries.FirstOrDefault(f => f.Name == country);
-    }
+    public List<Place> Places { get; set; }=new List<Place>();    
   }
 }

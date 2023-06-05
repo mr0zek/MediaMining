@@ -49,6 +49,8 @@ namespace MediaPreprocessor.Geolocation
       }
       else
       {
+        //var c = _cache.First(f=>f.Key.Latitude == position.Latitude && f.Key.Longitude == position.Longitude);
+
         lock (_filePath)
         {
           HttpClient httpClient = new HttpClient();

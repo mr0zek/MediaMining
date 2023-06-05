@@ -10,6 +10,7 @@ namespace MediaPreprocessor.Positions
     Position Get(DateTime date);
     void AddRange(IEnumerable<Position> positions);
     Track GetFromDay(Date date);
+    Track GetFromRange(Date dateFrom, Date dateTo);
     DateRange GetDateRange();
   }
 }

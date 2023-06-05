@@ -5,5 +5,6 @@ namespace MediaPreprocessor.Positions.StopDetection
   public interface IStopDetector
   {
     IEnumerable<Stop> Detect(IEnumerable<Position> positions);
+    StopsAndTracks DetectStopAndTracks(IEnumerable<Position> positions);
   }
 }

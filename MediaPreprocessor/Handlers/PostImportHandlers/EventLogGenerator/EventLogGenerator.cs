@@ -180,13 +180,13 @@ namespace MediaPreprocessor.Handlers.PostImportHandlers.EventLogGenerator
       FeatureCollection fc = new FeatureCollection();
 
       //Tracks
-      int colorIndex = 0;
-      foreach (var track in tracks.OrderBy(f => f.Key).Select(f => f.Value))
-      {
-        track.Compact().WriteAsTrack(fc, colors[colorIndex % colors.Length]);
-        WriteStartStop(track, fc);
-        colorIndex++;
-      }
+      //int colorIndex = 0;
+      //foreach (var track in tracks.OrderBy(f => f.Key).Select(f => f.Value))
+      //{
+      //  track.Compact().WriteAsTrack(fc, colors[colorIndex % colors.Length]);
+      //  WriteStartStop(track, fc);
+      //  colorIndex++;
+      //}
 
       //foreach (var stop in stops.SelectMany(f => f.Value))
       //{
@@ -251,27 +251,6 @@ namespace MediaPreprocessor.Handlers.PostImportHandlers.EventLogGenerator
             { "path", medium.Path.FileName.ToString() },
             //{ "name", _geolocation.GetReverseGeolocationData(medium.GpsLocation).GetLocationName() },
             { "date", medium.CreatedDate.ToString("o") }
-          }));
-    }
-
-    private void WriteStop(Stop stop, FeatureCollection fc)
-    {
-      var data = _geolocation.GetReverseGeolocationData(stop.Position);
-
-      fc.Features.Add(
-        new Feature(
-          new Point(
-            new GeoJSON.Net.Geometry.Position(stop.Position.Latitude, stop.Position.Longitude)),
-          new Dictionary<string, object>()
-          {
-            { "marker-color", "#ed1d1d" },
-            { "marker-size", "large" },
-            { "marker-symbol", "star" },
-            { "duration", stop.Duration() },
-            { "name", data.LocationName },
-            { "country", data.Country },
-            { "dateFrom", stop.DateFrom.ToString("o") },
-            { "dateTo", stop.DateTo.ToString("o") }
           }));
     }
 

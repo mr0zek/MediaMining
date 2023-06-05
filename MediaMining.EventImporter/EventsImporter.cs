@@ -7,27 +7,31 @@ using MediaPreprocessor.Shared;
 using MediaPreprocessor.Geolocation;
 using MediaPreprocessor.Positions.StopDetection;
 using Microsoft.Extensions.Logging;
+using MediaPreprocessor.Events.Log;
 
 namespace MediaMining.EventsImporter
 {
   public class EventsImporter : IImporter
   {
-    private readonly IEventRepository _eventsRepositry; 
+    private readonly IEventRepository _eventsRepository; 
     private readonly IPositionsRepository _positionsRepository;
     private readonly IStopDetector _stopDetector;
     private readonly IGeolocation _geolocation;
     private readonly ILogger _log;
+    private readonly IEventLogFactory _eventLogFactory;    
 
     public EventsImporter(IEventRepository eventsRepositry,
       IPositionsRepository positionsRepository,
       IStopDetector stopDetector,
-      IGeolocation geolocation,
+      IGeolocation geolocation,      
+      IEventLogFactory eventLogFactory,
       ILoggerFactory loggerFactory)
-    {
+    {      
+      _eventLogFactory = eventLogFactory;
       _stopDetector = stopDetector;
       _geolocation = geolocation;
       _positionsRepository = positionsRepository;
-      _eventsRepositry = eventsRepositry;
+      _eventsRepository = eventsRepositry;
       _log = loggerFactory.CreateLogger(GetType());
     }
 
@@ -49,26 +53,20 @@ namespace MediaMining.EventsImporter
 
         IEnumerable<Stop>? stops = _stopDetector.Detect(positions.Positions);
 
-        foreach(var position in stops.Select(f=>f.Position))
+        foreach (var stop in stops)
         {
-          var data = _geolocation.GetReverseGeolocationData(position);
-          if(!d.HasCountry(data.Country))
-          {
-            d.Countries.Add(new Country()
-            {
-              Name = data.Country
-            });
-          }
-
-          Country country = d.GetCountry(data.Country);
-          if (country.Places.FirstOrDefault(f => f == data.LocationName) == null)
-          {
-            country.Places.Add(data.LocationName);
-          }
+          var data = _geolocation.GetReverseGeolocationData(stop.Position);
+          d.Places.Add(new Place() {
+            Time = stop.DateFrom,
+            Duration = stop.Duration(),
+            LocationName = data.LocationName
+          });          
         }
       }
 
-      _eventsRepositry.Add(e);
+      _eventsRepository.Add(e);
+                 
+      filePath.DeleteFile();      
     }
 
     public bool CanImport(FilePath path)

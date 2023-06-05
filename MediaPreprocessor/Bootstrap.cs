@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using Autofac;
+using MediaPreprocessor.Directions;
 using MediaPreprocessor.Events;
 using MediaPreprocessor.Events.Log;
 using MediaPreprocessor.Handlers;
@@ -12,6 +13,7 @@ using MediaPreprocessor.Handlers.MediaImportHandlers;
 using MediaPreprocessor.Handlers.PostImportHandlers;
 using MediaPreprocessor.Handlers.PostImportHandlers.EventLogGenerator;
 using MediaPreprocessor.Importers;
+using MediaPreprocessor.MapGenerator;
 using MediaPreprocessor.Media;
 using MediaPreprocessor.Positions;
 using MediaPreprocessor.Positions.StopDetection;
@@ -74,7 +76,7 @@ namespace MediaPreprocessor
         }
         if (!options.ContainsKey("events"))
         {
-          options["events"] = Path.Combine(options["basepath"], "events");
+          options["events"] = Path.Combine(options["basepath"], "destination");
         }
         if (!options.ContainsKey("positions"))
         {
@@ -86,13 +88,13 @@ namespace MediaPreprocessor
         }
         if (!options.ContainsKey("eventsLog"))
         {
-          options["eventsLog"] = Path.Combine(options["basepath"], "eventsLog");
+          options["eventslog"] = Path.Combine(options["basepath"], "destination");
         }        
       }
 
       string destination = options.ContainsKey("destination") ? options["destination"] : "/data/destination";
       string source = options.ContainsKey("source") ? options["source"] : "/data/source";
-      string events = options.ContainsKey("events") ? options["events"] : "/data/events";
+      string events = options.ContainsKey("events") ? options["events"] : "/data/destination";
       string positions = options.ContainsKey("positions") ? options["positions"] : "/data/positions";
       string geolocation = options.ContainsKey("geolocation") ? options["geolocation"] : "/data/geolocation";
       string eventsLog = options.ContainsKey("eventslog") ? options["eventslog"] : "/data/eventsLog";
@@ -109,9 +111,11 @@ namespace MediaPreprocessor
       builder.RegisterType<PositionsRepository>().WithParameter("basePath", positions).SingleInstance().AsImplementedInterfaces();
       builder.RegisterType<Geolocation.Geolocation>().WithParameter("filePath", geolocation).SingleInstance().AsImplementedInterfaces();
       builder.RegisterType<Inbox>().WithParameter("sourcePath", new []{ source}).AsImplementedInterfaces();
-      builder.RegisterType<EventLogFactory>().AsImplementedInterfaces();
+      builder.RegisterType<EventLogFactory>().AsImplementedInterfaces();      
       builder.RegisterType<StopDetector>().AsImplementedInterfaces();
-      builder.RegisterType<EventLogUpdater>().AsImplementedInterfaces().WithParameter("basePath", "/data/eventsLog");
+      builder.RegisterType<DirectionsProvider>().AsImplementedInterfaces();
+      builder.RegisterType<MapGenerator.MapGenerator>().AsImplementedInterfaces();
+      builder.RegisterType<GeojsonGenerator>().AsImplementedInterfaces();      
       builder.RegisterType<CalculateDailyStats>().AsImplementedInterfaces().WithParameter("outputFileName", "/data/positions/distanceStats.csv");
       builder.RegisterType<MediaTypeDetector>().AsImplementedInterfaces()
         .WithParameter("moviesExtensions", new[] { "mp4", "mts", "mov" })

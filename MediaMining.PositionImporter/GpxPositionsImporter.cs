@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using MediaMining.PositionImporter.Gpx;
+using MediaPreprocessor.Directions;
 using MediaPreprocessor.Positions;
 using MediaPreprocessor.Shared;
 using Microsoft.Extensions.Logging;
@@ -35,8 +36,13 @@ namespace MediaMining.PositionImporter
     }
 
 
-    public GpxPositionsImporter(IPositionsRepository positionsRepository, 
-      ILoggerFactory loggerFactory) : base(positionsRepository, loggerFactory)
+    public GpxPositionsImporter(
+      IPositionsRepository positionsRepository,
+      IDirectionsProvider directions,
+      ILoggerFactory loggerFactory) : base(
+        positionsRepository,
+        directions,
+        loggerFactory)
     {
     }
   }

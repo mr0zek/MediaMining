@@ -45,6 +45,19 @@ namespace MediaPreprocessor.Positions
       }
     }
 
+    internal class PositionWithDateComparer : IEqualityComparer<Position>
+    {
+      public bool Equals(Position x, Position y)
+      {
+        return x.Latitude == y.Latitude && x.Longitude == y.Longitude && x.Date == y.Date;  
+      }
+
+      public int GetHashCode(Position obj)
+      {
+        return 1;
+      }
+    }
+
     public double DistanceTo(Position targetCoordinates)
     {
       if (targetCoordinates == this)
@@ -109,7 +122,7 @@ namespace MediaPreprocessor.Positions
 
     public Position Round()
     {
-      return new Position(Math.Round(Latitude, 4), Math.Round(Longitude, 4), Date);
+      return new Position(Math.Round(Latitude, 2), Math.Round(Longitude, 2), Date);
     }
   }
 }

@@ -11,7 +11,7 @@ namespace MediaMining.PositionImporter
   {
     static void Main(string[] args)
     {
-      new MyBootstrap().Run(args);
+      new MyBootstrap().Run(args, 1, false);
     }
   }
 
@@ -21,6 +21,7 @@ namespace MediaMining.PositionImporter
     {
       builder.RegisterType<GpxPositionsImporter>().AsImplementedInterfaces();
       builder.RegisterType<GoogleTakoutImporter>().AsImplementedInterfaces();
+      builder.RegisterType<GeojsonImporter>().AsImplementedInterfaces();
     }
   }
 }

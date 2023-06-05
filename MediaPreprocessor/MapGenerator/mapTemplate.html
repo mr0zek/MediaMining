@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+
+  <title>Quick Start - Leaflet</title>
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+          integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+          crossorigin=""></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+  <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
+</head>
+
+<body>
+
+  <div id="mapid" style="width: 100%; height: 1000px;"></div>
+  <script>
+		data = JSON.parse(`@geojson@`)
+
+		var map = L.map('mapid',
+			{
+				zoomControl: false
+			}).setView([51.505, -0.09], 8);
+
+		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+		}).addTo(map);
+
+
+		var geojsonLayer = L.geoJson(null, {
+			style: function(feature) {
+				return {
+					color: feature.properties["stroke"],
+					weight: feature.properties["stroke-width"],
+					opacity: feature.properties["stroke-opacity"]
+				}
+			},
+			pointToLayer: function (geoJsonPoint, latlng) {
+				var marker = L.marker(latlng);
+				marker.openPopup();
+				return marker;
+			}
+		});
+		geojsonLayer.bindPopup(function (layer) {
+			return layer.feature.properties.name;
+		}).addTo(map);
+
+		geojsonLayer.addData(data);
+		var bounds = geojsonLayer.getBounds();
+		map.fitBounds(bounds);
+
+
+  </script>
+
+
+
+</body>
+
+</html>

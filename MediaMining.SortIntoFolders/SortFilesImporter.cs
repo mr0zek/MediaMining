@@ -2,9 +2,11 @@
 using System.IO;
 using System.Linq;
 using MediaPreprocessor.Events;
+using MediaPreprocessor.Geolocation;
 using MediaPreprocessor.Handlers.MediaImportHandlers;
 using MediaPreprocessor.Importers;
 using MediaPreprocessor.Media;
+using MediaPreprocessor.Positions;
 using MediaPreprocessor.Shared;
 using Microsoft.Extensions.Logging;
 
@@ -16,16 +18,22 @@ namespace MediaMining.SortIntoFolders
     private readonly IMediaTypeDetector _mediaTypeDetector;
     private readonly ExistingDirectoryPath _importToPath;
     private readonly IEventRepository _eventRepository;
+    private readonly IGeolocation _geolocation;
+    private readonly IPositionsRepository _positionsRepository;
     private readonly ILogger _log;
 
 
     public SortFilesImporter(
       IEventRepository eventRepository,
       ILoggerFactory loggerFactory,
+      IGeolocation geolocation,
+      IPositionsRepository positionsRepository,
       string[] knownFileTypes, 
       IMediaTypeDetector mediaTypeDetector, 
       string importToPath)
     {
+      _positionsRepository = positionsRepository;
+      _geolocation = geolocation;
       _eventRepository = eventRepository;
       _knownFileTypes = knownFileTypes;
       _mediaTypeDetector = mediaTypeDetector;
@@ -49,6 +57,35 @@ namespace MediaMining.SortIntoFolders
           }
         }
 
+        var position = _positionsRepository.Get(p.CreatedDate);
+        if (p.GpsLocation == null && position != null)
+        {
+          p.GpsLocation = position;
+          _log.LogInformation($"GPS information updated in file: {p.Path} - lat:{p.GpsLocation.Latitude}, lon:{p.GpsLocation.Longitude}");
+        }
+        else
+        {
+          var distance = p.GpsLocation.DistanceTo(position);
+          if (distance > 1) // 1km
+          {
+            var distances = _positionsRepository.GetFromDay(p.CreatedDate).Positions
+              .Where(f => f.Date > p.CreatedDate.AddHours(-2) && f.Date < p.CreatedDate.AddHours(2))
+              .Select(f => new Tuple<Position, double>(f, f.DistanceTo(p.GpsLocation)));
+
+            var p2 = distances.OrderBy(f => f.Item2).First();
+
+            _log.LogError($"Distance between calculated and exif position is {distance} km");
+          }
+        }
+
+        if (p.GpsLocation != null && p.LocationName == null)
+        {
+          var location = _geolocation.GetReverseGeolocationData(p.GpsLocation);
+          p.LocationName = location.LocationName;
+          p.Country = location.Country;
+          _log.LogInformation($"Location information updated in file: {p.Path} - {p.LocationName}");
+        }
+
         p.MoveTo(CalculateTargetPath(p));
         p.Save();
       }
@@ -67,8 +104,9 @@ namespace MediaMining.SortIntoFolders
         Event ex = _eventRepository.Get(media.EventId);
         targetDirectory = _importToPath.AddDirectory(media.CreatedDate.ToString("yyyy"), ex.GetUniqueName(),
           media.CreatedDate.ToString("yyyy-MM-dd"));
+        targetDirectory = targetDirectory.AddDirectory(media.CreatedDate.ToString("HH")+" - "+media.LocationName);
       }
-
+      
       return targetDirectory.ToFilePath(media.Path.FileName);
     }
 

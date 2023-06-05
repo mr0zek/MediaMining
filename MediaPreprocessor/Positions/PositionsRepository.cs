@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using GeoJSON.Net.Feature;
+using GeoJSON.Net.Geometry;
 using MediaPreprocessor.Shared;
+using Newtonsoft.Json;
 
 namespace MediaPreprocessor.Positions
 {
@@ -52,8 +55,18 @@ namespace MediaPreprocessor.Positions
 
         FilePath filePath = GeneratePositionsPath(p.Key);
         filePath.Directory.Create();
-        _positionsByDate[p.Key].Write(filePath);
+        WriteTrack(_positionsByDate[p.Key], filePath);
       }
+    }
+
+    public void WriteTrack(Track track, FilePath filePath)
+    {
+      var s = JsonConvert.SerializeObject(new FeatureCollection(track.Positions.Select(f => new Feature(
+          new Point(
+            new GeoJSON.Net.Geometry.Position(f.Latitude, f.Longitude)),
+            new { reportTime = f.Date.ToString("o") })).ToList()), Formatting.Indented);
+
+        File.WriteAllText(filePath, s);      
     }
 
     private string GeneratePositionsPath(Date date)
@@ -76,6 +89,22 @@ namespace MediaPreprocessor.Positions
       {
         return new Track();
       }
+    }
+
+    public Track GetFromRange(Date dateFrom, Date dateTo)
+    {
+      List<Position> result = new List<Position>();
+
+      for (var date = dateFrom; date <= dateTo; date++)
+      {
+        LoadCoordinatesForDate(date);
+
+        if (_positionsByDate.ContainsKey(date))
+        {
+          result.AddRange(_positionsByDate[date].Positions);
+        }        
+      }
+      return new Track(result);
     }
 
     public DateRange GetDateRange()
