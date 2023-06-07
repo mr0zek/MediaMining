@@ -8,6 +8,9 @@ using MediaPreprocessor.Geolocation;
 using MediaPreprocessor.Positions.StopDetection;
 using Microsoft.Extensions.Logging;
 using MediaPreprocessor.Events.Log;
+using MediaPreprocessor.MapGenerator;
+using GeoJSON.Net.Feature;
+using Newtonsoft.Json;
 
 namespace MediaMining.EventsImporter
 {
@@ -18,18 +21,28 @@ namespace MediaMining.EventsImporter
     private readonly IStopDetector _stopDetector;
     private readonly IGeolocation _geolocation;
     private readonly ILogger _log;
-    private readonly IEventLogFactory _eventLogFactory;    
+    private readonly IEventLogFactory _eventLogFactory;
+    private readonly IGeojsonGenerator _geojsonGenerator;
+    private readonly IMapGenerator _mapGenerator;
+    private readonly DirectoryPath _basePath;
+
 
     public EventsImporter(IEventRepository eventsRepositry,
       IPositionsRepository positionsRepository,
       IStopDetector stopDetector,
-      IGeolocation geolocation,      
+      IGeolocation geolocation,   
+      IGeojsonGenerator geojsonGenerator,
+      IMapGenerator mapGenerator,
       IEventLogFactory eventLogFactory,
-      ILoggerFactory loggerFactory)
+      ILoggerFactory loggerFactory,
+      string basePath)
     {      
       _eventLogFactory = eventLogFactory;
+      _basePath = basePath;
       _stopDetector = stopDetector;
       _geolocation = geolocation;
+      _geojsonGenerator = geojsonGenerator;
+      _mapGenerator = mapGenerator;
       _positionsRepository = positionsRepository;
       _eventsRepository = eventsRepositry;
       _log = loggerFactory.CreateLogger(GetType());
@@ -65,13 +78,47 @@ namespace MediaMining.EventsImporter
       }
 
       _eventsRepository.Add(e);
+
+      GenerateMap(e);   
                  
       filePath.DeleteFile();      
     }
 
+    private DirectoryPath GetMapFilePath(Event e)
+    {
+      return _basePath
+        .AddDirectory(e.DateFrom.Year.ToString())
+        .AddDirectory(e.DateFrom.ToString("yyyy-MM-dd") + " - " + e.Name);
+    }
+
+    private void GenerateMap(Event ev)
+    {
+      var directoryPath = GetMapFilePath(ev);
+      directoryPath.Create();
+
+      FeatureCollection fc = _geojsonGenerator.Generate(ev);
+      
+      var geojsonFilePath = directoryPath.ToFilePath(ev.DateFrom.ToString("yyyy-MM-dd") + " - " + ev.Name + ".geojson");
+
+      File.WriteAllText(geojsonFilePath, JsonConvert.SerializeObject(fc, Formatting.Indented));
+
+      FilePath mapFile = directoryPath.ToFilePath("index.html");
+      mapFile.Directory.Create();
+
+      string map = _mapGenerator.Generate(new MapGeneratorOptions { FilePath = geojsonFilePath.FileName, Title = ev.GetUniqueName() });
+      File.WriteAllText(mapFile, map);
+
+      FilePath batFile = directoryPath.ToFilePath("run.bat");
+      File.WriteAllText(batFile, 
+        @"start http-server
+          start http://localhost:8080");
+
+      _log.LogInformation($"Map generated for : {ev}");
+    }
+
     public bool CanImport(FilePath path)
     {
-      return path.Extension.ToLower() == ".event";
+      return path.Extension.ToLower() == "event";
     }
     
   }

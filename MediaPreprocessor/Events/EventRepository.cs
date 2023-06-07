@@ -14,9 +14,6 @@ namespace MediaPreprocessor.Events
   class EventRepository : IEventRepository
   {
     private readonly DirectoryPath _eventsPath;
-    private readonly IEventLogFactory _eventLogFactory;
-    private readonly IGeojsonGenerator _geojsonGenerator;
-    private readonly IMapGenerator _mapGenerator;
     private readonly IDictionary<EventId, Event> _events = new Dictionary<EventId, Event>();
 
     public EventRepository(
@@ -25,11 +22,8 @@ namespace MediaPreprocessor.Events
       IGeojsonGenerator geojsonGenerator,
       IMapGenerator mapGenerator)
     {
-      _mapGenerator = mapGenerator;
-      _eventLogFactory = eventLogFactory;
       _eventsPath = eventsPath;
       LoadFromPath(eventsPath);
-      _geojsonGenerator = geojsonGenerator;
     }
 
     public Event GetByDate(Date date)
@@ -81,22 +75,7 @@ namespace MediaPreprocessor.Events
       var directoryPath = GetFilePath(ev);
       directoryPath.Create();
 
-      File.WriteAllText(directoryPath.ToFilePath(ev.DateFrom.ToString("yyyy-MM-dd") + " - " + ev.Name + ".event"), JsonConvert.SerializeObject(ev, Formatting.Indented));
-
-      FeatureCollection fc = _geojsonGenerator.Generate(ev);
-
-      directoryPath.AddDirectory("map").Create();
-
-      string geojson = JsonConvert.SerializeObject(fc, Formatting.Indented);
-      File.WriteAllText(
-        directoryPath.AddDirectory("map").ToFilePath(ev.DateFrom.ToString("yyyy-MM-dd") + " - " + ev.Name + ".geojson"),
-        geojson);
-
-      FilePath mapFile = directoryPath.AddDirectory("map").ToFilePath("index.html");
-      mapFile.Directory.Create();
-
-      string map = _mapGenerator.Generate(geojson);
-      File.WriteAllText(mapFile, map);
+      File.WriteAllText(directoryPath.ToFilePath(ev.DateFrom.ToString("yyyy-MM-dd") + " - " + ev.Name + ".event"), JsonConvert.SerializeObject(ev, Formatting.Indented));      
     }
   }
 }

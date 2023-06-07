@@ -84,6 +84,26 @@ namespace MediaPreprocessor.Shared
       return a._value > b;
     }
 
+    public static bool operator <=(Date a, DateTime b)
+    {
+      return a._value <= b;
+    }
+
+    public static bool operator >=(Date a, DateTime b)
+    {
+      return a._value >= b;
+    }
+
+    public static bool operator <=(DateTime b, Date a)
+    {
+      return b <= a._value;
+    }
+
+    public static bool operator >=(DateTime b, Date a)
+    {
+      return b >= a._value;
+    }
+
     public static bool operator <(Date a, DateTime b)
     {
       return a._value < b;

@@ -109,13 +109,17 @@ namespace MediaPreprocessor
       builder.RegisterType<Importers.Importers>().AsImplementedInterfaces();
       builder.RegisterType<EventRepository>().WithParameter("eventsPath", events).SingleInstance().AsImplementedInterfaces();
       builder.RegisterType<PositionsRepository>().WithParameter("basePath", positions).SingleInstance().AsImplementedInterfaces();
+      builder.RegisterType<MediaRepository>()
+        .WithParameter("basePath", destination)
+        .WithParameter("knownFilesExtensions", new[] { "mp4", "mts", "mov", "jpg", "jpeg", "webp" })
+        .AsImplementedInterfaces();
       builder.RegisterType<Geolocation.Geolocation>().WithParameter("filePath", geolocation).SingleInstance().AsImplementedInterfaces();
       builder.RegisterType<Inbox>().WithParameter("sourcePath", new []{ source}).AsImplementedInterfaces();
       builder.RegisterType<EventLogFactory>().AsImplementedInterfaces();      
       builder.RegisterType<StopDetector>().AsImplementedInterfaces();
       builder.RegisterType<DirectionsProvider>().AsImplementedInterfaces();
       builder.RegisterType<MapGenerator.MapGenerator>().AsImplementedInterfaces();
-      builder.RegisterType<GeojsonGenerator>().AsImplementedInterfaces();      
+      builder.RegisterType<GeojsonGenerator>().WithParameter("basePath", destination).AsImplementedInterfaces();      
       builder.RegisterType<CalculateDailyStats>().AsImplementedInterfaces().WithParameter("outputFileName", "/data/positions/distanceStats.csv");
       builder.RegisterType<MediaTypeDetector>().AsImplementedInterfaces()
         .WithParameter("moviesExtensions", new[] { "mp4", "mts", "mov" })

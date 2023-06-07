@@ -3,7 +3,7 @@
 
 <head>
 
-  <title>Quick Start - Leaflet</title>
+  <title>@Title@</title>
 
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +30,17 @@
 
   <div id="mapid" style="width: 100%; height: 1000px;"></div>
   <script>
-		data = JSON.parse(`@geojson@`)
+    $.ajax({
+      dataType: "json",
+      url: "@FilePath@",
+      success: function (data) {
+        $(data.features).each(function (key, data) {
+          geojsonLayer.addData(data);
+          var bounds = geojsonLayer.getBounds();
+          map.fitBounds(bounds);          
+        });
+      }
+    }).error(function () { });
 
 		var map = L.map('mapid',
 			{
@@ -42,28 +52,68 @@
 		}).addTo(map);
 
 
-		var geojsonLayer = L.geoJson(null, {
-			style: function(feature) {
-				return {
-					color: feature.properties["stroke"],
-					weight: feature.properties["stroke-width"],
-					opacity: feature.properties["stroke-opacity"]
-				}
-			},
-			pointToLayer: function (geoJsonPoint, latlng) {
-				var marker = L.marker(latlng);
-				marker.openPopup();
-				return marker;
-			}
-		});
-		geojsonLayer.bindPopup(function (layer) {
-			return layer.feature.properties.name;
-		}).addTo(map);
+    var videoOptions = {
+      radius: 8,
+      fillColor: "#ff7800",
+      color: "#000",
+      weight: 1,
+      opacity: 1,
+      fillOpacity: 0.8
+    };
 
-		geojsonLayer.addData(data);
-		var bounds = geojsonLayer.getBounds();
-		map.fitBounds(bounds);
+    var imageOptions = {
+      radius: 8,
+      fillColor: "#0078ff",
+      color: "#000",
+      weight: 1,
+      opacity: 1,
+      fillOpacity: 0.8
+    };
 
+    const popupOptions = {
+      maxWidth: "410"
+    }
+
+    var geojsonLayer = L.geoJson(null, {
+      style: function (feature) {
+        if (feature.geometry.type == "LineString") {
+          return {
+            color: feature.properties["stroke"],
+            weight: feature.properties["stroke-width"],
+            opacity: feature.properties["stroke-opacity"]
+          }
+        }
+      },
+      pointToLayer: function (feature, latlng) {
+        if (feature.properties.imageUrl != undefined) {
+          var marker = L.circleMarker(latlng, imageOptions);
+          const customPopup = '<p>Date: ' + feature.properties.date + '<br>Path: ' + feature.properties.imageUrl + '</p><a href="' + feature.properties.imageUrl + '" target="_blank"><img src="' + feature.properties.imageUrl + '" style="width: 400px"></a>'
+          marker.bindPopup(customPopup, popupOptions);
+          marker.openPopup();
+          return marker;
+        }
+
+        if (feature.properties.videoUrl != undefined) {
+          var marker = L.circleMarker(latlng, videoOptions);
+          const customPopup = '<p>Date: ' + feature.properties.date + '</br>Path: ' + feature.properties.videoUrl + '</p><video controls style="width: 400px"><source src="' + feature.properties.videoUrl + '" ></source></video>'
+          marker.bindPopup(customPopup, popupOptions);
+          marker.openPopup();
+
+          return marker;
+        }
+
+        var marker = L.marker(latlng);
+        marker.bindPopup(feature.properties.name, popupOptions);
+        marker.openPopup();
+        return marker;
+      }
+    });
+
+    geojsonLayer.bindPopup(function (layer) {
+      return layer.feature.properties.name;
+    })
+
+    geojsonLayer.addTo(map);
 
   </script>
 

@@ -9,6 +9,6 @@ namespace MediaPreprocessor.MapGenerator
 {
   public interface IMapGenerator
   {
-    string Generate(string geojson);
+    string Generate(MapGeneratorOptions mapGeneratorOptions);
   }
 }

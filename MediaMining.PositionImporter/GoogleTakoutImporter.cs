@@ -14,7 +14,7 @@ namespace MediaMining.PositionImporter
   {
     public override bool CanImport(FilePath path)
     {
-      return path.Extension.ToLower() == ".json";
+      return path.Extension.ToLower() == "json";
     }
 
     protected override IEnumerable<Position> LoadPositions(FilePath trackFile)

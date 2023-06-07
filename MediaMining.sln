@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Algorythm.txt = Algorythm.txt
 		Plan.txt = Plan.txt
 		sampleEventLog.json = sampleEventLog.json
+		Todo.txt = Todo.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaMining.SortIntoFolders", "MediaMining.SortIntoFolders\MediaMining.SortIntoFolders.csproj", "{C78293D5-A49D-43FF-86AC-FAD41617B6D2}"

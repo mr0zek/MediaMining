@@ -71,7 +71,7 @@ namespace MediaPreprocessor.Media
 
     public MediaType Type { get; set; }
 
-    public static Media FromFile(string filePath, MediaId eventMediaId, MediaType mediaType)
+    public static Media FromFile(FilePath filePath, MediaId eventMediaId, MediaType mediaType)
     {
       if (!File.Exists(filePath))
       {

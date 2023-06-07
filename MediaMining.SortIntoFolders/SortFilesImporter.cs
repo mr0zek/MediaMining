@@ -95,16 +95,14 @@ namespace MediaMining.SortIntoFolders
       }
     }
 
-    private FilePath CalculateTargetPath(MediaPreprocessor.Media.Media media)
+    private FilePath CalculateTargetPath(Media media)
     {
       var targetDirectory = _importToPath.AddDirectory(media.CreatedDate.ToString("yyyy"), media.CreatedDate.ToString("yyyy-MM-dd"));
 
       if (media.EventId != null)
       {
         Event ex = _eventRepository.Get(media.EventId);
-        targetDirectory = _importToPath.AddDirectory(media.CreatedDate.ToString("yyyy"), ex.GetUniqueName(),
-          media.CreatedDate.ToString("yyyy-MM-dd"));
-        targetDirectory = targetDirectory.AddDirectory(media.CreatedDate.ToString("HH")+" - "+media.LocationName);
+        targetDirectory = _importToPath.AddDirectory(media.CreatedDate.ToString("yyyy"), ex.GetUniqueName(), media.CreatedDate.ToString("yyyy-MM-dd"));        
       }
       
       return targetDirectory.ToFilePath(media.Path.FileName);
@@ -112,7 +110,7 @@ namespace MediaMining.SortIntoFolders
 
     public bool CanImport(FilePath path)
     {
-      return _knownFileTypes.Any(f=> f == path.Extension.ToLower().Replace(".",""));
+      return _knownFileTypes.Any(f=> f == path.Extension);
     }
   }
 }

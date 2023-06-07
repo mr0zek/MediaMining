@@ -2,7 +2,7 @@
 
 namespace MediaPreprocessor.Events
 {
-  internal interface IGeojsonGenerator
+  public interface IGeojsonGenerator
   {
     FeatureCollection Generate(Event ev);
   }

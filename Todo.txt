@@ -1,0 +1,6 @@
+B³êdy
+- grupowanie zdjêc w jedno kó³ko
+- Stopy sie nie zaznaczaj¹ (prawdopodobnie przy zmianie z jazdy na spacer) - Kalisz
+
+Timeline slider
+https://codepen.io/daveknispel/pen/PzOPVo

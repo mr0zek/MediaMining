@@ -13,7 +13,7 @@ namespace MediaMining.PositionImporter
   {
     public override bool CanImport(FilePath path)
     {
-      return path.Extension.ToLower() == ".gpx";
+      return path.Extension.ToLower() == "gpx";
     }
 
     protected override IEnumerable<Position> LoadPositions(FilePath trackFile)

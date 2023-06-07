@@ -23,7 +23,13 @@ namespace MediaPreprocessor.Shared
 
     public string FileName => System.IO.Path.GetFileName(_value);
     public bool Exists => System.IO.File.Exists(_value);
-    public string Extension => System.IO.Path.GetExtension(_value);
+    public string Extension => System.IO.Path.GetExtension(_value).ToLower().Replace(".", "");
+
+    internal static FilePath Parse(string f)
+    {
+      return new FilePath(f);
+    }
+
     public string FileNameWithoutExtension => System.IO.Path.GetFileNameWithoutExtension(_value);
 
     protected override object[] GetValues()

@@ -18,7 +18,7 @@ namespace MediaMining.GpsUpdate
   {
     protected override void RegisterExternals(ContainerBuilder builder, IDictionary<string, string> options)
     {
-      builder.RegisterType<EventsImporter.EventsImporter>()        
+      builder.RegisterType<EventsImporter.EventsImporter>().WithParameter("basePath",options["destination"])       
         .AsImplementedInterfaces();
     }
   }

@@ -16,7 +16,7 @@ namespace MediaMining.PositionImporter
   {
     public override bool CanImport(FilePath path)
     {
-      return path.Extension.ToLower() == ".geojson";
+      return path.Extension.ToLower() == "geojson";
     }
 
     protected override IEnumerable<Position> LoadPositions(FilePath trackFile)

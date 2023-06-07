@@ -1,6 +1,8 @@
 ﻿using GeoJSON.Net.Feature;
 using GeoJSON.Net.Geometry;
 using MediaPreprocessor.Geolocation;
+using MediaPreprocessor.Handlers.PostImportHandlers;
+using MediaPreprocessor.Media;
 using MediaPreprocessor.Positions;
 using MediaPreprocessor.Positions.StopDetection;
 using MediaPreprocessor.Shared;
@@ -14,15 +16,18 @@ namespace MediaPreprocessor.Events
   {
     private readonly IGeolocation _geolocation;
     private readonly IStopDetector _stopDetector;
+    private readonly IMediaRepository _mediaRepository;
     private readonly IPositionsRepository _positionsRepository;
 
     public GeojsonGenerator(
       IGeolocation geolocation, 
       IStopDetector stopDetector,
+      IMediaRepository mediaRepository,
       IPositionsRepository positionsRepository)
     {
       _geolocation = geolocation;
       _stopDetector = stopDetector;
+      _mediaRepository = mediaRepository;
       _positionsRepository = positionsRepository;
     }
 
@@ -78,14 +83,45 @@ namespace MediaPreprocessor.Events
         WriteTrack(t, fc, colors[colorIndex % colors.Length], ev.DateFrom);
         colorIndex++;
       }
-
-      
+            
       foreach (var stop in stopsAndTracks.Stops)
       {
         WriteStop(stop, fc, (stop.DateFrom-ev.DateFrom).Days+1);
       }
 
+      var media = _mediaRepository.GetAll(ev.DateFrom, ev.DateTo);
+      foreach (var m in media)
+      {
+        WriteMedia(m, fc);
+      }
+
       return fc;
+    }
+
+    private void WriteMedia(Media.Media m, FeatureCollection fc)
+    {
+      var f = new Feature(
+          new Point(
+            new GeoJSON.Net.Geometry.Position(m.GpsLocation.Latitude, m.GpsLocation.Longitude)),
+          new Dictionary<string, object>()
+          {
+            { "marker-color", "#212bb0" },
+            { "marker-size", "large" },
+            { "marker-symbol", "art-gallery" },
+            { "name", $"{m.LocationName}" },
+            { "date", m.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss") }
+          });
+      if (m.Type == MediaType.Photo)
+      {
+        f.Properties.Add("imageUrl", $"{DirectoryPath.Parse(m.CreatedDate.ToString("yyyy-MM-dd")).ToFilePath(m.Path.FileName)}");
+      }
+      if (m.Type == MediaType.Movie)
+      {
+        f.Properties.Add("videoUrl", $"{DirectoryPath.Parse(m.CreatedDate.ToString("yyyy-MM-dd")).ToFilePath(m.Path.FileName)}");
+      }
+
+      fc.Features.Add(f);
+
     }
 
     public void WriteTrack(Track track, FeatureCollection featureCollection, string color, Date dateFrom)
@@ -118,9 +154,9 @@ namespace MediaPreprocessor.Events
         {"stroke-width",5},
         {"stroke-opacity",1},
         {"distance", distance },
-        {"dateFrom", track.Positions.First().Date.ToString("o")},
-        {"dateTo", track.Positions.Last().Date.ToString("o")},
-        {"name", @$"Day: {(track.Positions.First().Date-dateFrom).Days+1}<br/>From: {track.Positions.First().Date.ToString("yyyy-MM-dd HH:mm")}<br/>To: {track.Positions.Last().Date.ToString("yyyy-MM-dd HH:mm")}<br/>Distance: {(int)track.CalculateDistance()} km" }
+        {"dateFrom", track.Positions.First().Date.ToString("yyyy-MM-dd HH:mm:ss")},
+        {"dateTo", track.Positions.Last().Date.ToString("yyyy-MM-dd HH:mm:ss")},
+        {"name", @$"<b>Day:</b> {(track.Positions.First().Date-dateFrom).Days+1}<br/><b>From:</b> {track.Positions.First().Date.ToString("yyyy-MM-dd HH:mm")}<br/>To: {track.Positions.Last().Date.ToString("yyyy-MM-dd HH:mm")}<br/><b>Distance:</b> {(int)track.CalculateDistance()} km" }
       }));
     }
 
@@ -137,8 +173,8 @@ namespace MediaPreprocessor.Events
             { "marker-size", "large" },
             { "marker-symbol", "star" },
             { "duration", stop.Duration() },
-            { "name", $"Day: {day}<br/>Date:{stop.DateFrom}<br/>{data.LocationName}" },
-            { "date", stop.Position.Date.ToString("o") }
+            { "name", $"<b>Day:</b> {day}<br/><b>Date:</b>{stop.DateFrom}<br/>{data.LocationName}" },
+            { "date", stop.Position.Date.ToString("yyyy-MM-dd HH:mm:ss") }
           }));
     }
   }
