@@ -85,33 +85,27 @@
         }
       },
       pointToLayer: function (feature, latlng) {
-        if (feature.properties.imageUrl != undefined) {
-          var marker = L.circleMarker(latlng, imageOptions);
-          const customPopup = '<p>Date: ' + feature.properties.date + '<br>Path: ' + feature.properties.imageUrl + '</p><a href="' + feature.properties.imageUrl + '" target="_blank"><img src="' + feature.properties.imageUrl + '" style="width: 400px"></a>'
-          marker.bindPopup(customPopup, popupOptions);
-          marker.openPopup();
-          return marker;
+        if (feature.properties.media != undefined) {
+          return L.circleMarker(latlng, imageOptions);
         }
 
-        if (feature.properties.videoUrl != undefined) {
-          var marker = L.circleMarker(latlng, videoOptions);
-          const customPopup = '<p>Date: ' + feature.properties.date + '</br>Path: ' + feature.properties.videoUrl + '</p><video controls style="width: 400px"><source src="' + feature.properties.videoUrl + '" ></source></video>'
-          marker.bindPopup(customPopup, popupOptions);
-          marker.openPopup();
+        return L.marker(latlng);
+      },
+      onEachFeature: function (feature, layer) {
+        let customPopup = feature.properties.name
+        if (feature.properties.media != undefined) {
+          let props = JSON.parse(feature.properties.media)
+          customPopup = '<p>Date: ' + feature.properties.date + '</p>'
 
-          return marker;
+          props.forEach(f => {
+            if (f.MediaType == 0) {
+              customPopup = customPopup + '<a href="' + f.MediaUrl + '" target="_blank"><img src="' + f.MediaUrl + '" style="width: 400px"></a>'
+            }
+          });
         }
-
-        var marker = L.marker(latlng);
-        marker.bindPopup(feature.properties.name, popupOptions);
-        marker.openPopup();
-        return marker;
+        layer.bindPopup(customPopup, popupOptions)
       }
     });
-
-    geojsonLayer.bindPopup(function (layer) {
-      return layer.feature.properties.name;
-    })
 
     geojsonLayer.addTo(map);
 

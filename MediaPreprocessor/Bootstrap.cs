@@ -121,9 +121,7 @@ namespace MediaPreprocessor
       builder.RegisterType<MapGenerator.MapGenerator>().AsImplementedInterfaces();
       builder.RegisterType<GeojsonGenerator>().WithParameter("basePath", destination).AsImplementedInterfaces();      
       builder.RegisterType<CalculateDailyStats>().AsImplementedInterfaces().WithParameter("outputFileName", "/data/positions/distanceStats.csv");
-      builder.RegisterType<MediaTypeDetector>().AsImplementedInterfaces()
-        .WithParameter("moviesExtensions", new[] { "mp4", "mts", "mov" })
-        .WithParameter("photosExtensions", new[] { "jpg", "jpeg", "webp" });
+      builder.RegisterType<MediaTypeDetector>().AsImplementedInterfaces();
       builder.RegisterType<EventLogGenerator>().AsImplementedInterfaces().WithParameter("basePath", eventsLog);
       builder.RegisterType<ActivityTypeDetector>().AsImplementedInterfaces();
 

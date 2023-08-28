@@ -45,11 +45,11 @@ namespace MediaPreprocessor.Positions
       }
     }
 
-    internal class PositionWithDateComparer : IEqualityComparer<Position>
+    internal class PositionWithoutDateComparer : IEqualityComparer<Position>
     {
       public bool Equals(Position x, Position y)
       {
-        return x.Latitude == y.Latitude && x.Longitude == y.Longitude && x.Date == y.Date;  
+        return x.Latitude == y.Latitude && x.Longitude == y.Longitude;  
       }
 
       public int GetHashCode(Position obj)
@@ -117,7 +117,7 @@ namespace MediaPreprocessor.Positions
 
     protected override object[] GetValues()
     {
-      return new object[] {Latitude, Longitude};
+      return new object[] {Latitude, Longitude, Date};
     }
 
     public Position Round()

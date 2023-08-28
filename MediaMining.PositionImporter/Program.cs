@@ -19,9 +19,15 @@ namespace MediaMining.PositionImporter
   {
     protected override void RegisterExternals(ContainerBuilder builder, IDictionary<string, string> options)
     {
-      builder.RegisterType<GpxPositionsImporter>().AsImplementedInterfaces();
-      builder.RegisterType<GoogleTakoutImporter>().AsImplementedInterfaces();
-      builder.RegisterType<GeojsonImporter>().AsImplementedInterfaces();
+      DateTime startDate = DateTime.MinValue;
+      if(options.ContainsKey("startdate"))
+      {
+        startDate = DateTime.Parse(options["startdate"]);
+      }
+
+      builder.RegisterType<GpxPositionsImporter>().WithParameter("startDate", startDate).AsImplementedInterfaces();
+      builder.RegisterType<GoogleTakoutImporter>().WithParameter("startDate", startDate).AsImplementedInterfaces();
+      builder.RegisterType<GeojsonImporter>().WithParameter("startDate", startDate).AsImplementedInterfaces();
     }
   }
 }

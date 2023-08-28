@@ -2,7 +2,7 @@
 {
   public enum MediaType
   {
-    Photo,
-    Movie
+    Image,
+    Video
   }
 }

@@ -6,6 +6,7 @@ using MediaPreprocessor.Media;
 using MediaPreprocessor.Positions;
 using MediaPreprocessor.Positions.StopDetection;
 using MediaPreprocessor.Shared;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -90,35 +91,65 @@ namespace MediaPreprocessor.Events
       }
 
       var media = _mediaRepository.GetAll(ev.DateFrom, ev.DateTo);
-      foreach (var m in media)
+
+      IDictionary<Positions.Position, List<Media.Media>> clustered = ClusterData(media);
+
+      foreach (var m in clustered)
       {
-        WriteMedia(m, fc);
+        WriteMedia(m.Key, m.Value, fc);
       }
 
       return fc;
     }
 
-    private void WriteMedia(Media.Media m, FeatureCollection fc)
+    private IDictionary<Positions.Position, List<Media.Media>> ClusterData(IEnumerable<Media.Media> media)
     {
-      var f = new Feature(
-          new Point(
-            new GeoJSON.Net.Geometry.Position(m.GpsLocation.Latitude, m.GpsLocation.Longitude)),
+      var clustered = new Dictionary<Positions.Position, List<Media.Media>>();
+      foreach (var m in media)
+      {
+        bool addNew = true;
+        foreach(var c in clustered)
+        {
+          if(m.GpsLocation.DistanceTo(c.Key) < 5 && Math.Abs((m.CreatedDate-c.Key.Date).TotalSeconds) < TimeSpan.FromDays(1).TotalSeconds)
+          {
+            c.Key.Latitude = (c.Key.Latitude + m.GpsLocation.Latitude) / 2;
+            c.Key.Longitude = (c.Key.Longitude + m.GpsLocation.Longitude) / 2;
+            c.Key.Date = c.Key.Date.AddSeconds(Math.Abs((c.Key.Date - m.CreatedDate).TotalSeconds));
+            c.Value.Add(m);
+            addNew = false;
+            break;
+          }
+        }
+        if(addNew)
+        {
+          try
+          {
+            clustered.Add(m.GpsLocation, new List<Media.Media>() { m });
+          }
+          catch (Exception ex)
+          {
+
+          }
+        }
+      }
+
+      return clustered;
+    }
+
+    private void WriteMedia(Positions.Position position, IEnumerable<Media.Media> m, FeatureCollection fc)
+    {
+      var data = JsonConvert.SerializeObject(m.Select(f => new { MediaUrl = f.CreatedDate.ToString("yyyy-MM-dd")+"/"+f.Path.FileName, MediaType = f.Type }));
+
+      var f = new Feature(                  
+          new Point(new GeoJSON.Net.Geometry.Position(position.Latitude, position.Longitude)),
           new Dictionary<string, object>()
           {
             { "marker-color", "#212bb0" },
             { "marker-size", "large" },
-            { "marker-symbol", "art-gallery" },
-            { "name", $"{m.LocationName}" },
-            { "date", m.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss") }
-          });
-      if (m.Type == MediaType.Photo)
-      {
-        f.Properties.Add("imageUrl", $"{DirectoryPath.Parse(m.CreatedDate.ToString("yyyy-MM-dd")).ToFilePath(m.Path.FileName)}");
-      }
-      if (m.Type == MediaType.Movie)
-      {
-        f.Properties.Add("videoUrl", $"{DirectoryPath.Parse(m.CreatedDate.ToString("yyyy-MM-dd")).ToFilePath(m.Path.FileName)}");
-      }
+            { "marker-symbol", "art-gallery" },            
+            { "date", position.Date.ToString("yyyy-MM-dd HH:mm:ss") },
+            { "media", data }
+          });      
 
       fc.Features.Add(f);
 

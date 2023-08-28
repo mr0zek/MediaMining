@@ -31,6 +31,8 @@ namespace MediaPreprocessor.Events
 
     public List<Day> Days { get; set; } = new List<Day>();
 
+    public List<Note> Notes { get; set; } = new List<Note>();
+
     [JsonIgnore]
     public EventId Id
     {

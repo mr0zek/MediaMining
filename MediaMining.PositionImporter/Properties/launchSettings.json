@@ -2,7 +2,7 @@
   "profiles": {
     "MediaMining.PositionImporter": {
       "commandName": "Project",
-      "commandLineArgs": "basePath=c:\\data\\"
+      "commandLineArgs": "basePath=c:\\data\\ startDate=2023-06-01"
     }
   }
 }

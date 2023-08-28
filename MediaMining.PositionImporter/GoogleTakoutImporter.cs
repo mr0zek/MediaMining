@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using MediaMining.PositionImporter.GoogleTakeout;
@@ -44,7 +45,8 @@ namespace MediaMining.PositionImporter
     public GoogleTakoutImporter(
       IPositionsRepository positionsRepository, 
       IDirectionsProvider directionsPrivider,
-      ILoggerFactory loggerFactory) : base(positionsRepository, directionsPrivider, loggerFactory)
+      ILoggerFactory loggerFactory,
+      DateTime startDate) : base(positionsRepository, directionsPrivider, loggerFactory, startDate)
     {
     }
   }

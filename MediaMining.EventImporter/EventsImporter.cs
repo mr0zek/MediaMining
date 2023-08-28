@@ -81,7 +81,7 @@ namespace MediaMining.EventsImporter
 
       GenerateMap(e);   
                  
-      filePath.DeleteFile();      
+      //filePath.DeleteFile();      
     }
 
     private DirectoryPath GetMapFilePath(Event e)

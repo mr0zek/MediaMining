@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SortIntoFolders": {
+      "commandName": "Project",
+      "commandLineArgs": "-e c:\\data\\exifTool\\exifTool.exe c:\\My\\Zdjęcia\\TelefonBeatki\\"
+    }
+  }
+}

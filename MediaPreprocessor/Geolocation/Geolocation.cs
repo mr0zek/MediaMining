@@ -15,7 +15,7 @@ namespace MediaPreprocessor.Geolocation
 {
   internal class Geolocation : IGeolocation
   {
-    private readonly IDictionary<Position, ReverseGeolocationData> _cache = new Dictionary<Position, ReverseGeolocationData>();
+    private readonly Dictionary<Position, ReverseGeolocationData> _cache = new Dictionary<Position, ReverseGeolocationData>(new Position.PositionWithoutDateComparer());
     private readonly FilePath _filePath;
     private ILogger _log;
 
@@ -29,7 +29,7 @@ namespace MediaPreprocessor.Geolocation
       {
         var t = JsonConvert.DeserializeObject<ReverseGeolocationDataRoot>(File.ReadAllText(_filePath))
           .ReverseGeolocationData;
-        _cache = new Dictionary<Position, ReverseGeolocationData>();
+        _cache = new Dictionary<Position, ReverseGeolocationData>(new Position.PositionWithoutDateComparer());
         foreach (var data in t)
         {
           if (!_cache.ContainsKey(data.GetPosition().Round()))

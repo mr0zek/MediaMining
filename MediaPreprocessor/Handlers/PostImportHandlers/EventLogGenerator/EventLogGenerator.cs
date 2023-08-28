@@ -106,7 +106,7 @@ namespace MediaPreprocessor.Handlers.PostImportHandlers.EventLogGenerator
       List<MediaDescription> result = new ();
       foreach (var medium in media)
       {
-        if (medium.Type == MediaType.Photo)
+        if (medium.Type == MediaType.Image)
         {
           var targetPath = mediaPath.ToFilePath(medium.Path.FileNameWithoutExtension + ".webp");
           if (!targetPath.Exists)

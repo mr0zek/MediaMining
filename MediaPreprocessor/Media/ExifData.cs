@@ -35,7 +35,13 @@ namespace MediaPreprocessor.Media
       {
         var lat = ConvertCoordinate(data["GPS Latitude"]);
         var lon = ConvertCoordinate(data["GPS Longitude"]);
-        GPSLocation = new Position(lat, lon, CreatedDate);
+        DateTime date = CreatedDate;
+        if (data.ContainsKey("GPSDateTime"))
+        {
+          date = DateTime.Parse(data["GPSDateTime"]);
+        }
+
+        GPSLocation = new Position(lat, lon, date);
       }
     }
 
@@ -79,6 +85,7 @@ namespace MediaPreprocessor.Media
 
       stringBuilder.Append($" -DateTimeOriginal=\"{CreatedDate:o}\"");
       stringBuilder.Append($" -FileModifyDate=\"{CreatedDate:o}\"");
+      stringBuilder.Append($" -GPSDateTime=\"{GPSLocation.Date:o}\"");
 
       if (LocationName != null)
       {
@@ -189,6 +196,6 @@ namespace MediaPreprocessor.Media
           throw new Exception("Cannot find exiftool in path : " + myProcess.StartInfo.FileName + ", " + error.ToString());
         }
       }
-    }
+    }    
   }
 }

@@ -69,7 +69,7 @@ namespace MediaPreprocessor.Positions
 
     internal void Merge(Track track)
     {
-      IEnumerable<Position> x = track.Positions.Except(Positions, new Position.PositionWithDateComparer()).ToList();
+      IEnumerable<Position> x = track.Positions.Except(Positions).ToList();
       _positions = _positions.Concat(x).ToList();
       _dirty = true;
     }

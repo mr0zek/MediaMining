@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using MediaMining.PositionImporter.Gpx;
@@ -39,10 +40,12 @@ namespace MediaMining.PositionImporter
     public GpxPositionsImporter(
       IPositionsRepository positionsRepository,
       IDirectionsProvider directions,
-      ILoggerFactory loggerFactory) : base(
+      ILoggerFactory loggerFactory,
+      DateTime startDate) : base(
         positionsRepository,
         directions,
-        loggerFactory)
+        loggerFactory,
+        startDate)
     {
     }
   }
