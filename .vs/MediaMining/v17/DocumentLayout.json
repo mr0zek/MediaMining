@@ -3,10 +3,6 @@
   "WorkspaceRootPath": "D:\\MediaMining\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{34FEDBBE-ACFA-484E-8744-79888A2697AB}|MediaPreprocessor\\MediaPreprocessor.csproj|d:\\mediamining\\mediapreprocessor\\geojson\\geojsongenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{34FEDBBE-ACFA-484E-8744-79888A2697AB}|MediaPreprocessor\\MediaPreprocessor.csproj|solutionrelative:mediapreprocessor\\geojson\\geojsongenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{553E271A-1FA6-48E0-B411-76297E2A7650}|ProcessPossitions\\ProcessPossitions.csproj|d:\\mediamining\\processpossitions\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{553E271A-1FA6-48E0-B411-76297E2A7650}|ProcessPossitions\\ProcessPossitions.csproj|solutionrelative:processpossitions\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -34,24 +30,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\MediaMining\\ProcessPossitions\\Program.cs",
               "RelativeDocumentMoniker": "ProcessPossitions\\Program.cs",
               "ToolTip": "D:\\MediaMining\\ProcessPossitions\\Program.cs",
               "RelativeToolTip": "ProcessPossitions\\Program.cs",
-              "ViewState": "AQIAACQAAAAAAAAAAAAAADwAAAAUAAAA",
+              "ViewState": "AQIAAAsAAAAAAAAAAAAgwDcAAAAPAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-03T12:54:41.671Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "DirectionsProvider.cs",
               "DocumentMoniker": "D:\\MediaMining\\MediaPreprocessor\\Directions\\DirectionsProvider.cs",
               "RelativeDocumentMoniker": "MediaPreprocessor\\Directions\\DirectionsProvider.cs",
@@ -64,20 +60,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "GeojsonGenerator.cs",
-              "DocumentMoniker": "D:\\MediaMining\\MediaPreprocessor\\Geojson\\GeojsonGenerator.cs",
-              "RelativeDocumentMoniker": "MediaPreprocessor\\Geojson\\GeojsonGenerator.cs",
-              "ToolTip": "D:\\MediaMining\\MediaPreprocessor\\Geojson\\GeojsonGenerator.cs",
-              "RelativeToolTip": "MediaPreprocessor\\Geojson\\GeojsonGenerator.cs",
-              "ViewState": "AQIAADMAAAAAAAAAAAAswB8AAAAdAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-03T10:55:01.608Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 4,
               "Title": "GpxPositionsImporter.cs",
               "DocumentMoniker": "D:\\MediaMining\\MediaMining.PositionImporter\\GpxPositionsImporter.cs",
               "RelativeDocumentMoniker": "MediaMining.PositionImporter\\GpxPositionsImporter.cs",
@@ -90,7 +73,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "PositionsImporter.cs",
               "DocumentMoniker": "D:\\MediaMining\\MediaMining.PositionImporter\\PositionsImporter.cs",
               "RelativeDocumentMoniker": "MediaMining.PositionImporter\\PositionsImporter.cs",
@@ -103,7 +86,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "GoogleTakoutImporter.cs",
               "DocumentMoniker": "D:\\MediaMining\\MediaMining.PositionImporter\\GoogleTakoutImporter.cs",
               "RelativeDocumentMoniker": "MediaMining.PositionImporter\\GoogleTakoutImporter.cs",
