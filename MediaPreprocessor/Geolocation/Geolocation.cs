@@ -13,15 +13,15 @@ using Newtonsoft.Json;
 
 namespace MediaPreprocessor.Geolocation
 {
-  internal class Geolocation : IGeolocation
+  public class Geolocation : IGeolocation
   {
     private readonly Dictionary<Position, ReverseGeolocationData> _cache = new Dictionary<Position, ReverseGeolocationData>(new Position.PositionWithoutDateComparer());
     private readonly FilePath _filePath;
     private ILogger _log;
 
-    public Geolocation(string filePath, ILoggerFactory loggerFactory)
+    public Geolocation(string directoryPath, ILoggerFactory loggerFactory)
     {
-      _filePath = DirectoryPath.Parse(filePath).ToFilePath("geolocation.json");
+      _filePath = DirectoryPath.Parse(directoryPath).ToFilePath("geolocation.json");
       
       _log = loggerFactory.CreateLogger<Geolocation>();
 
@@ -29,6 +29,7 @@ namespace MediaPreprocessor.Geolocation
       {
         var t = JsonConvert.DeserializeObject<ReverseGeolocationDataRoot>(File.ReadAllText(_filePath))
           .ReverseGeolocationData;
+       
         _cache = new Dictionary<Position, ReverseGeolocationData>(new Position.PositionWithoutDateComparer());
         foreach (var data in t)
         {
@@ -41,15 +42,15 @@ namespace MediaPreprocessor.Geolocation
     }
 
     public ReverseGeolocationResponse GetReverseGeolocationData(Position pos)
-    {      
-      var position = pos.Round();
+    {
+      var position = pos.Round();      
       if (_cache.ContainsKey(position))
       {
         _log.LogDebug($"GetReverseGeolocationData - loaded from cache - {position}");
       }
       else
       {
-        //var c = _cache.First(f=>f.Key.Latitude == position.Latitude && f.Key.Longitude == position.Longitude);
+        var c = _cache.Where(f=>f.Key.Latitude == position.Latitude).ToList();
 
         lock (_filePath)
         {
@@ -76,11 +77,17 @@ namespace MediaPreprocessor.Geolocation
           t2.Wait();
           _cache[position] = JsonConvert.DeserializeObject<ReverseGeolocationData>(t2.Result);
           _cache[position].Raw = t2.Result;
-          
+          _cache[position].NormalizedLat = position.Latitude;
+          _cache[position].NormalizedLon = position.Longitude;
+
+          _filePath.Directory.Create();
+
           File.WriteAllText(_filePath,
               JsonConvert.SerializeObject(new ReverseGeolocationDataRoot(_cache.Values), Formatting.Indented));
 
-          _log.LogDebug($"GetReverseGeolocationData - loaded from nominatim - {position}");
+
+
+          _log.LogDebug($"GetReverseGeolocationData - loaded from nominatim - {position}, returned position (lat:{_cache[position].Lat}, lon:{_cache[position].Lon})");
         }
       }
       return new ReverseGeolocationResponse(_cache[position].GetLocationName(), _cache[position].GetCountry());      

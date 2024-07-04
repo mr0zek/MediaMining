@@ -122,7 +122,7 @@ namespace MediaPreprocessor.Positions
 
     public Position Round()
     {
-      return new Position(Math.Round(Latitude, 2), Math.Round(Longitude, 2), Date);
+      return new Position(Math.Round(Latitude, 3), Math.Round(Longitude, 3), Date);
     }
   }
 }

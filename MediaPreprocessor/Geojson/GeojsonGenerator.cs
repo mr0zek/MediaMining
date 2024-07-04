@@ -17,22 +17,19 @@ namespace MediaPreprocessor.Events
   {
     private readonly IGeolocation _geolocation;
     private readonly IStopDetector _stopDetector;
-    private readonly IMediaRepository _mediaRepository;
     private readonly IPositionsRepository _positionsRepository;
 
     public GeojsonGenerator(
       IGeolocation geolocation, 
       IStopDetector stopDetector,
-      IMediaRepository mediaRepository,
       IPositionsRepository positionsRepository)
     {
       _geolocation = geolocation;
       _stopDetector = stopDetector;
-      _mediaRepository = mediaRepository;
       _positionsRepository = positionsRepository;
     }
 
-    public FeatureCollection Generate(Event ev)
+    public FeatureCollection Generate(Event ev, IEnumerable<Media.Media> media)
     {
       var colors = new string[]
       {
@@ -88,9 +85,7 @@ namespace MediaPreprocessor.Events
       foreach (var stop in stopsAndTracks.Stops)
       {
         WriteStop(stop, fc, (stop.DateFrom-ev.DateFrom).Days+1);
-      }
-
-      var media = _mediaRepository.GetAll(ev.DateFrom, ev.DateTo);
+      }      
 
       IDictionary<Positions.Position, List<Media.Media>> clustered = ClusterData(media);
 
@@ -104,7 +99,7 @@ namespace MediaPreprocessor.Events
 
     private IDictionary<Positions.Position, List<Media.Media>> ClusterData(IEnumerable<Media.Media> media)
     {
-      var clustered = new Dictionary<Positions.Position, List<Media.Media>>();
+      var clustered = new Dictionary<Positions.Position, List<Media.Media>>(new Positions.Position.PositionWithoutDateComparer());
       foreach (var m in media)
       {
         bool addNew = true;
@@ -126,7 +121,7 @@ namespace MediaPreprocessor.Events
           {
             clustered.Add(m.GpsLocation, new List<Media.Media>() { m });
           }
-          catch (Exception ex)
+          catch (Exception)
           {
 
           }

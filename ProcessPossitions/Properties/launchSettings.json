@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "SortIntoFolders": {
+    "ProcessPossitions": {
       "commandName": "Project",
       "commandLineArgs": "-e c:\\data\\exifTool\\exifTool.exe d:\\Islandia\\Posortowane\\"
     }

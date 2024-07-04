@@ -27,7 +27,7 @@ namespace MediaPreprocessor
 
     public void Run(string[] args, int count = 0, bool runInParallel = true)
     {
-      var container = BuildContainer(args);
+      var container = BuildContainer(args, RegisterExternals);
 
       var log = container.Resolve<ILoggerFactory>().CreateLogger(GetType());
       log.LogInformation("Application starting ...");
@@ -52,7 +52,7 @@ namespace MediaPreprocessor
       }
     }
 
-    private IContainer BuildContainer(string[] args)
+    public static IContainer BuildContainer(string[] args, Action<ContainerBuilder, IDictionary<string, string>> registerExternals)
     {
       var builder = new ContainerBuilder();
 
@@ -110,8 +110,7 @@ namespace MediaPreprocessor
       builder.RegisterType<EventRepository>().WithParameter("eventsPath", events).SingleInstance().AsImplementedInterfaces();
       builder.RegisterType<PositionsRepository>().WithParameter("basePath", positions).SingleInstance().AsImplementedInterfaces();
       builder.RegisterType<MediaRepository>()
-        .WithParameter("basePath", destination)
-        .WithParameter("knownFilesExtensions", new[] { "mp4", "mts", "mov", "jpg", "jpeg", "webp" })
+        .WithParameter("basePath", destination)        
         .AsImplementedInterfaces();
       builder.RegisterType<Geolocation.Geolocation>().WithParameter("filePath", geolocation).SingleInstance().AsImplementedInterfaces();
       builder.RegisterType<Inbox>().WithParameter("sourcePath", new []{ source}).AsImplementedInterfaces();
@@ -124,8 +123,9 @@ namespace MediaPreprocessor
       builder.RegisterType<MediaTypeDetector>().AsImplementedInterfaces();
       builder.RegisterType<EventLogGenerator>().AsImplementedInterfaces().WithParameter("basePath", eventsLog);
       builder.RegisterType<ActivityTypeDetector>().AsImplementedInterfaces();
+      builder.RegisterType<TimelineGenerator>().AsImplementedInterfaces();
 
-      RegisterExternals(builder, options);
+      registerExternals(builder, options);
 
       return builder.Build();
     }

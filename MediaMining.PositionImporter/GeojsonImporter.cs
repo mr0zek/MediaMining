@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 
 namespace MediaMining.PositionImporter
 {
-  class GeojsonImporter : PositionsImporter
+  public class GeojsonImporter : PositionsImporter
   {
     public override bool CanImport(FilePath path)
     {
@@ -31,7 +31,8 @@ namespace MediaMining.PositionImporter
     public GeojsonImporter(
       IPositionsRepository positionsRepository, 
       IDirectionsProvider directionsPrivider,
-      ILoggerFactory loggerFactory) : base(positionsRepository, directionsPrivider, loggerFactory)
+      ILoggerFactory loggerFactory,
+      DateTime startDate) : base(positionsRepository, directionsPrivider, loggerFactory, startDate)
     {
     }
   }

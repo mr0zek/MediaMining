@@ -12,5 +12,6 @@ namespace MediaPreprocessor.Positions
     Track GetFromDay(Date date);
     Track GetFromRange(Date dateFrom, Date dateTo);
     DateRange GetDateRange();
+    bool PositionExists(DateTime createdDate);
   }
 }

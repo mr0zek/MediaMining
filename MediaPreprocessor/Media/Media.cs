@@ -73,7 +73,7 @@ namespace MediaPreprocessor.Media
 
     public static Media FromFile(FilePath filePath)
     {
-      return FromFile(filePath, MediaId.NewId(), MediaTypeDetector.Detect(filePath));
+      return FromFile(filePath, MediaId.NewId(), new MediaTypeDetector().Detect(filePath));
     }
 
     public static Media FromFile(FilePath filePath, MediaId eventMediaId, MediaType mediaType)
@@ -86,7 +86,7 @@ namespace MediaPreprocessor.Media
       return new Media(eventMediaId, mediaType, exifData.GPSLocation, exifData.CreatedDate, filePath);
     }
 
-    public void Save()
+    public void SaveAll()
     {
       if (_dirty)
       {
@@ -99,7 +99,7 @@ namespace MediaPreprocessor.Media
         _dirty = false;
       }
     }
-
+    
     public void MoveTo(FilePath filePath)
     {
       if (Path == filePath)

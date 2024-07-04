@@ -9,16 +9,12 @@ using Microsoft.Extensions.Logging;
 
 namespace MediaMining.PositionImporter
 {
-  abstract class PositionsImporter : IImporter
+  public abstract class PositionsImporter : IImporter
   {
     private readonly IPositionsRepository _positionsRepository; 
     private readonly ILogger _log;
     protected readonly IDirectionsProvider _directions;
     private readonly DateTime _startDate;
-
-    public IPositionsRepository PositionsRepository { get; }
-    public IDirectionsProvider Directions { get; }
-    public ILoggerFactory LoggerFactory { get; }
 
     public PositionsImporter(
       IPositionsRepository positionsRepository,
@@ -30,14 +26,7 @@ namespace MediaMining.PositionImporter
       _startDate = startDate;
       _positionsRepository = positionsRepository;
       _log = loggerFactory.CreateLogger(GetType());
-    }
-
-    protected PositionsImporter(IPositionsRepository positionsRepository, IDirectionsProvider directions, ILoggerFactory loggerFactory)
-    {
-      PositionsRepository = positionsRepository;
-      Directions = directions;
-      LoggerFactory = loggerFactory;
-    }
+    }    
 
     public void Import(FilePath filePath)
     {
@@ -46,14 +35,25 @@ namespace MediaMining.PositionImporter
 
       positions = LoadFromDirections(positions);
 
-      _positionsRepository.AddRange(positions);
-
       filePath.DeleteFile();
+
+      _positionsRepository.AddRange(positions);      
     }
 
-    public virtual Position[] LoadFromDirections(Position[] positions)
+    public Position[] LoadFromDirections(Position[] positions)
     {
-      return positions;
+      List<Position> result = new List<Position>(positions);
+      Position prevPosition = positions.First();
+      foreach (var position in positions)
+      {
+        if (prevPosition.DistanceTo(position) > 1)
+        {
+          result.AddRange(_directions.GetDirections(prevPosition, position).Positions);
+        }
+        prevPosition = position;
+      }
+
+      return result.ToArray();
     }
 
     public abstract bool CanImport(FilePath path);

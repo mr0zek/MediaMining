@@ -19,16 +19,11 @@ namespace MediaPreprocessor.Media
     {
       _moviesExtensions = moviesExtensions;
       _photosExtensions = photosExtensions;
-    }
+    }    
 
-    public static MediaType Detect(FilePath filePath)
+    public MediaType Detect(FilePath filePath)
     {
-      return new MediaTypeDetector().Detect(filePath);
-    }
-
-    public MediaType Detect(string filePath)
-    {
-      var ext = Path.GetExtension(filePath).ToLower().Replace(".","");
+      var ext = filePath.Extension;
       if (_moviesExtensions.Any(f => f == ext))
       {
         return MediaType.Video;
@@ -40,6 +35,12 @@ namespace MediaPreprocessor.Media
       }
 
       throw new ArgumentException("Unrecognized file type : "+filePath);
+    }
+
+    public bool IsKnownType(FilePath filePath)
+    {
+      var ext = filePath.Extension;
+      return _moviesExtensions.Any(f => f == ext) || _photosExtensions.Any(f => f == ext);
     }
   }
 }

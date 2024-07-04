@@ -53,11 +53,10 @@ namespace MediaPreprocessor.Events
 
     public void LoadFromPath(DirectoryPath eventsPath)
     {
-      EventsRoot result = new EventsRoot();
       var files = Directory.GetFiles(eventsPath, "*.event", SearchOption.AllDirectories);
       foreach (string file in files)
       {
-        Event @event = JsonConvert.DeserializeObject<Event>(File.ReadAllText(file), new JsonDateConverter());
+        Event @event = Event.FromFile(file);
         _events.Add(@event.Id, @event);        
       }
     }

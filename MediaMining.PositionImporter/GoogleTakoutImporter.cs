@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace MediaMining.PositionImporter
 {
-  class GoogleTakoutImporter : PositionsImporter
+  public class GoogleTakoutImporter : PositionsImporter
   {
     public override bool CanImport(FilePath path)
     {
@@ -24,23 +24,7 @@ namespace MediaMining.PositionImporter
       return records.Locations
         .Where(f => f.Source == "GPS" && f.Accuracy < 150)
         .Select(f => new Position(f.Lat, f.Lng, f.Date));
-    }
-
-    public override Position[] LoadFromDirections(Position[] positions)
-    {
-      List<Position> result = new List<Position>(positions); 
-      Position prevPosition = positions.First();
-      foreach (var position in positions)
-      {
-        if (prevPosition.DistanceTo(position) > 1)
-        {
-          result.AddRange(_directions.GetDirections(prevPosition, position).Positions);          
-        }
-        prevPosition = position;
-      }
-
-      return result.ToArray();
-    }
+    }  
 
     public GoogleTakoutImporter(
       IPositionsRepository positionsRepository, 

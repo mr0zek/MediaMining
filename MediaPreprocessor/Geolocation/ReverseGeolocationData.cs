@@ -7,8 +7,12 @@ namespace MediaPreprocessor.Geolocation
   {
     public double Lat { get; set; }
     public double Lon { get; set; }
+
+    public double NormalizedLat { get; set; }
+    public double NormalizedLon { get; set; }
+
     public string Osm_type { get; set; }
-    public Position GetPosition() => new Position(Lat, Lon, DateTime.MaxValue);
+    public Position GetPosition() => new Position(NormalizedLat, NormalizedLon, DateTime.MaxValue);
 
     public string Display_Name { get; set; }
     public Address Address { get; set; }
@@ -28,11 +32,16 @@ namespace MediaPreprocessor.Geolocation
       if (Address?.Town != null)
       {
         return Address.Town;
-      }
+      }      
 
       if (Address?.Tourism != null)
       {
         return Address.Tourism;
+      }
+
+      if (Address?.Municipality != null)
+      {
+        return Address?.Municipality;
       }
 
       return null;

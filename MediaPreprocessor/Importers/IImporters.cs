@@ -1,6 +1,6 @@
 ﻿namespace MediaPreprocessor.Importers
 {
-  internal interface IImporters
+  public interface IImporters
   {
     void Import(bool runInParallel);
   }

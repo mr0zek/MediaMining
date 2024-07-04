@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using MediaPreprocessor.Positions;
+using MediaPreprocessor.Shared;
 
 namespace MediaPreprocessor.Media
 {
@@ -22,7 +23,7 @@ namespace MediaPreprocessor.Media
     public ExifData(IDictionary<string, string> data)
     {
       // CreatedDate
-      var dateTagNames = new[] { "Date/Time Original", "Create Date", "File Modification Date/Time" };
+      var dateTagNames = new[] { "Creation Date","Date/Time Original", "Create Date", "File Modification Date/Time" };
 
       string key = dateTagNames.First(f => data.ContainsKey(f) && data[f] != "0000-00-00 00:00:00");
       string stringDate = data[key];
@@ -120,7 +121,7 @@ namespace MediaPreprocessor.Media
       File.SetLastWriteTime(fileName, CreatedDate);
     }
 
-    public static ExifData LoadFromFile(string fileName)
+    public static ExifData LoadFromFile(FilePath fileName)
     {
       int timeout = 10000000;
       using (Process myProcess = new Process())
@@ -129,7 +130,8 @@ namespace MediaPreprocessor.Media
         myProcess.StartInfo.FileName = ExifToolPath;
         myProcess.StartInfo.RedirectStandardOutput = true;
         myProcess.StartInfo.RedirectStandardError = true;
-        myProcess.StartInfo.Arguments = $"-q -q -stay_open 0 \"{fileName}\"";
+        myProcess.StartInfo.WorkingDirectory = fileName.Directory;
+        myProcess.StartInfo.Arguments = $"-q -q -stay_open 0 \"{fileName.FileName}\"";
         myProcess.StartInfo.CreateNoWindow = true;
 
         StringBuilder output = new StringBuilder();

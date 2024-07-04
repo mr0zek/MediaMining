@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "GenerateEvent": {
+      "commandName": "Project",
+      "commandLineArgs": "-e c:\\data\\exiftool\\exifTool.exe -p c:\\data\\positions\\ -v \"c:\\My\\Zdjęcia\\Test\\2023-08-05 - Litwa, Łotwa, Estonia.event\" c:\\My\\Zdjęcia\\Test\\"
+    }
+  }
+}

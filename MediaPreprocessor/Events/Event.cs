@@ -87,5 +87,10 @@ namespace MediaPreprocessor.Events
         Days = ev.Days;
       }
     }
+
+    public static Event FromFile(FilePath filePath)
+    {
+      return JsonConvert.DeserializeObject<Event>(File.ReadAllText(filePath), new JsonDateConverter());
+    }
   }
 }

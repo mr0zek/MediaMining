@@ -9,17 +9,14 @@ using Newtonsoft.Json;
 
 namespace MediaPreprocessor.Positions
 {
-  class PositionsRepository : IPositionsRepository
+  public class PositionsRepository : IPositionsRepository
   {
-    private readonly DirectoryPath _basePath;
-    private readonly IDictionary<string, string> _trackPaths;
+    private readonly DirectoryPath _basePath;    
     private readonly Dictionary<Date, Track> _positionsByDate = new();
 
     public PositionsRepository(string basePath)
     {
-      _basePath = basePath;
-      _trackPaths = Directory.GetFiles(basePath, "*.geojson", SearchOption.AllDirectories)
-        .ToDictionary(Path.GetFileNameWithoutExtension, f => f);
+      _basePath = basePath;      
     }
 
     public Position Get(DateTime date)
@@ -31,7 +28,7 @@ namespace MediaPreprocessor.Positions
 
       if (!_positionsByDate.ContainsKey(date))
       {
-        return null;
+        throw new Exception("Canot find positions for this date");
       }
 
       return _positionsByDate[date].FindClosest(date);
@@ -66,15 +63,15 @@ namespace MediaPreprocessor.Positions
             new GeoJSON.Net.Geometry.Position(f.Latitude, f.Longitude)),
             new { reportTime = f.Date.ToString("o") })).ToList()), Formatting.Indented);
 
-        File.WriteAllText(filePath, s);      
+      File.WriteAllText(filePath, s);
     }
 
-    private string GeneratePositionsPath(Date date)
+    private FilePath GeneratePositionsPath(Date date)
     {
       return _basePath
         .AddDirectory(date.Year.ToString())
         .AddDirectory(date.ToString("yyyy-MM"))
-        .ToFilePath(date.ToString("yyyy-MM-dd")+".geojson");
+        .ToFilePath(date.ToString("yyyy-MM-dd") + ".geojson");
     }
 
     public Track GetFromDay(Date date)
@@ -102,7 +99,7 @@ namespace MediaPreprocessor.Positions
         if (_positionsByDate.ContainsKey(date))
         {
           result.AddRange(_positionsByDate[date].Positions);
-        }        
+        }
       }
       return new Track(result);
     }
@@ -110,8 +107,8 @@ namespace MediaPreprocessor.Positions
     public DateRange GetDateRange()
     {
       var files = Directory.GetFiles(_basePath, "*.geojson", SearchOption.AllDirectories);
-      var dates =  files.Select(f => Date.Parse(Path.GetFileNameWithoutExtension(f))).OrderBy(f=>f);
-      return new DateRange() {From = dates.First(), To = dates.Last()};
+      var dates = files.Select(f => Date.Parse(Path.GetFileNameWithoutExtension(f))).OrderBy(f => f);
+      return new DateRange() { From = dates.First(), To = dates.Last() };
     }
 
     private void LoadCoordinatesForDate(Date date)
@@ -119,16 +116,23 @@ namespace MediaPreprocessor.Positions
       if (_positionsByDate.ContainsKey(date))
       {
         return;
-      }
+      }      
 
-      if (!_trackPaths.ContainsKey(date.ToString()))
+      var trackFile = GeneratePositionsPath(date);
+      if (trackFile.Exists)
       {
-        return;
+        _positionsByDate[date] = Track.Load(trackFile);
+      }
+    }
+
+    public bool PositionExists(DateTime date)
+    {
+      if (!_positionsByDate.ContainsKey(date))
+      {
+        LoadCoordinatesForDate(date);
       }
 
-      var trackFile = _trackPaths[date.ToString()];
-      
-      _positionsByDate[date] = Track.Load(trackFile);
+      return _positionsByDate.ContainsKey(date);
     }
   }
 }

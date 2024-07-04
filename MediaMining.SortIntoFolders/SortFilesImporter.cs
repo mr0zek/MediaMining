@@ -87,7 +87,7 @@ namespace MediaMining.SortIntoFolders
         }
 
         p.MoveTo(CalculateTargetPath(p));
-        p.Save();
+        p.SaveAll();
       }
       catch (Exception ex)
       {

@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MediaMining.PositionImporter
 {
-  class GpxPositionsImporter : PositionsImporter
+  public class GpxPositionsImporter : PositionsImporter
   {
     public override bool CanImport(FilePath path)
     {
@@ -21,7 +21,8 @@ namespace MediaMining.PositionImporter
     {
       List<Position> result = new List<Position>();
 
-      using (GpxReader reader = new GpxReader(new FileStream(trackFile, FileMode.Open)))
+      using(var stream = new FileStream(trackFile, FileMode.Open))
+      using (GpxReader reader = new GpxReader(stream))
       {
         while (reader.Read())
         {

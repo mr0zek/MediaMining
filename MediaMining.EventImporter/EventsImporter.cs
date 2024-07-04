@@ -11,6 +11,8 @@ using MediaPreprocessor.Events.Log;
 using MediaPreprocessor.MapGenerator;
 using GeoJSON.Net.Feature;
 using Newtonsoft.Json;
+using MediaPreprocessor.Handlers.PostImportHandlers;
+using MediaPreprocessor.Media;
 
 namespace MediaMining.EventsImporter
 {
@@ -21,23 +23,21 @@ namespace MediaMining.EventsImporter
     private readonly IStopDetector _stopDetector;
     private readonly IGeolocation _geolocation;
     private readonly ILogger _log;
-    private readonly IEventLogFactory _eventLogFactory;
     private readonly IGeojsonGenerator _geojsonGenerator;
     private readonly IMapGenerator _mapGenerator;
     private readonly DirectoryPath _basePath;
-
+    private readonly IMediaRepository _mediaRepository;
 
     public EventsImporter(IEventRepository eventsRepositry,
       IPositionsRepository positionsRepository,
       IStopDetector stopDetector,
-      IGeolocation geolocation,   
+      IGeolocation geolocation,
       IGeojsonGenerator geojsonGenerator,
       IMapGenerator mapGenerator,
-      IEventLogFactory eventLogFactory,
+      IMediaRepository mediaRepository,
       ILoggerFactory loggerFactory,
       string basePath)
-    {      
-      _eventLogFactory = eventLogFactory;
+    {
       _basePath = basePath;
       _stopDetector = stopDetector;
       _geolocation = geolocation;
@@ -45,20 +45,14 @@ namespace MediaMining.EventsImporter
       _mapGenerator = mapGenerator;
       _positionsRepository = positionsRepository;
       _eventsRepository = eventsRepositry;
-      _log = loggerFactory.CreateLogger(GetType());
+      _mediaRepository = mediaRepository;
+      _log = loggerFactory.CreateLogger(GetType());      
     }
 
     public void Import(FilePath filePath)
     {
-      EventData eventData = EventData.FromFile(filePath);
-
-      Event e = new Event()
-      {
-        Name = eventData.Name,
-        DateFrom = eventData.DateFrom,
-        DateTo = eventData.DateTo
-      };
-
+      Event e = Event.FromFile(filePath);
+      
       for(Date day = e.DateFrom;day<=e.DateTo;day++)
       {
         var d = e.GetDay(day);
@@ -96,24 +90,9 @@ namespace MediaMining.EventsImporter
       var directoryPath = GetMapFilePath(ev);
       directoryPath.Create();
 
-      FeatureCollection fc = _geojsonGenerator.Generate(ev);
+      var m = _mediaRepository.GetAll(ev.DateFrom, ev.DateTo);
       
-      var geojsonFilePath = directoryPath.ToFilePath(ev.DateFrom.ToString("yyyy-MM-dd") + " - " + ev.Name + ".geojson");
-
-      File.WriteAllText(geojsonFilePath, JsonConvert.SerializeObject(fc, Formatting.Indented));
-
-      FilePath mapFile = directoryPath.ToFilePath("index.html");
-      mapFile.Directory.Create();
-
-      string map = _mapGenerator.Generate(new MapGeneratorOptions { FilePath = geojsonFilePath.FileName, Title = ev.GetUniqueName() });
-      File.WriteAllText(mapFile, map);
-
-      FilePath batFile = directoryPath.ToFilePath("run.bat");
-      File.WriteAllText(batFile, 
-        @"start http-server
-          start http://localhost:8080");
-
-      _log.LogInformation($"Map generated for : {ev}");
+      _mapGenerator.Generate(ev, m, directoryPath);      
     }
 
     public bool CanImport(FilePath path)
