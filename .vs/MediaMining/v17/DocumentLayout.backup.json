@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\My\\Trips\\MediaMining\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{0BC115F8-FFD1-4053-A014-343F9D8E83A3}|SortIntoFolders\\SortIntoFolders.csproj|c:\\my\\trips\\mediamining\\sortintofolders\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0BC115F8-FFD1-4053-A014-343F9D8E83A3}|SortIntoFolders\\SortIntoFolders.csproj|solutionrelative:sortintofolders\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\My\\Trips\\MediaMining\\SortIntoFolders\\Program.cs",
+              "RelativeDocumentMoniker": "SortIntoFolders\\Program.cs",
+              "ToolTip": "C:\\My\\Trips\\MediaMining\\SortIntoFolders\\Program.cs",
+              "RelativeToolTip": "SortIntoFolders\\Program.cs",
+              "ViewState": "AgIAADoAAAAAAAAAAAAgwEIAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-06T12:43:32.781Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

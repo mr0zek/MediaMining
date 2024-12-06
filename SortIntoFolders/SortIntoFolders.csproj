@@ -16,4 +16,14 @@
     <ProjectReference Include="..\MediaPreprocessor\MediaPreprocessor.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ExifTool\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ExifTool\exiftool.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

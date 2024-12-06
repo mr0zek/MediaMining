@@ -7,15 +7,19 @@ using MediaPreprocessor.Media;
 using MediaPreprocessor.Positions;
 using MediaPreprocessor.Shared;
 using NDesk.Options;
+using System.Text.RegularExpressions;
 
 internal class Program
 {
   static void Main(string[] args)
   {
     bool show_help = false;
+    DirectoryPath eventsDirectory = null;
+    ExifData.ExifToolPath = Path.Combine(Environment.CurrentDirectory, "ExifTool", "exiftool.exe");
 
     var p = new OptionSet() {
       { "e|exifToolPath=", "Path to exif tool", v => ExifData.ExifToolPath = v },
+      { "ev|eventsPath=", "Path to events folder", v => eventsDirectory = v },
       { "h|help=", "Show help", v => show_help = true }
     };
 
@@ -27,58 +31,121 @@ internal class Program
       if (extra.Count == 1)
       {
         DirectoryPath directory = extra[0];
+        if(eventsDirectory == null)
+        {
+          eventsDirectory = directory.AddDirectory("events").ToString();
+        }
 
         Console.WriteLine("Sorting files in directory : " + directory);
 
         var files = Directory.GetFiles(directory, "*.*", SearchOption.AllDirectories)
         .Select(x => (FilePath)x)
-         .Where(f => new MediaTypeDetector().IsKnownType(f));
+         .Where(f => new MediaTypeDetector().IsKnownType(f)).ToList();
 
         IContainer container = Bootstrap.BuildContainer(new string[0], (builder, options) =>
         {
           builder.RegisterType<MediaRepository>()
             .WithParameter("basePath", directory.ToString())
             .AsImplementedInterfaces();
+          builder.RegisterType<EventRepository>()
+            .WithParameter("eventsPath", eventsDirectory.ToString() )
+            .AsImplementedInterfaces();
           builder.RegisterType<PositionsRepository>()
             .WithParameter("basePath", directory.ToString())
             .AsImplementedInterfaces();
-        });
+        });    
+
+        int count = files.Count();
+        int index = 0;
+
+        var eventsRepository = container.Resolve<IEventRepository>();
+
+        DirectoryPath noExifDirectory = directory.AddDirectory("NoExifData");
         
-        //files.AsParallel().ForAll(file =>
-        files.ToList().ForEach(file =>
+        RemoveEmptyDirectories(directory);
+
+        noExifDirectory.Create();
+
+        files.ToList().AsParallel().ForAll(file =>
+        //files.ToList().ForEach(file =>
         {
           try
           {
-            Media media = Media.FromFile(file);
-            var eventFile = directory.ToFilePath("event.json");
-            Event ev = null;
-            if (eventFile.Exists)
+            Media media = null;
+            try
             {
-              ev = Event.FromFile(eventFile);
+              media = Media.FromFile(file);
+            }
+            catch
+            {
+              FilePath f = noExifDirectory.ToFilePath(file.FileName);
+              File.Move(file, f);
+              Console.WriteLine("No exif data, moving to: " + f);
+              return;
             }
 
-            DirectoryPath dir = directory.AddDirectory(media.CreatedDate.Date.ToString("yyyy-MM-dd"));
+            Event ev = eventsRepository.GetByDate(media.CreatedDate);
             
-            if (ev != null && media.CreatedDate >= ev.DateFrom && media.CreatedDate <= ev.DateTo)
+            DirectoryPath dir = directory.AddDirectory(media.CreatedDate.Date.ToString("yyyy-MM-dd"));
+
+            if (ev != null && media.CreatedDate >= ev.DateFrom && media.CreatedDate.Date <= ev.DateTo)
             {
               var day = ev.GetDay(media.CreatedDate.Date);
               if (day != null)
               {
-                dir = directory.AddDirectory(media.CreatedDate.Date.ToString("yyyy-MM-dd") + " - " + day.Name);
-              }              
+                if (day.Name != null)
+                {
+                  dir = directory.AddDirectory($"{ev.DateFrom.ToString("yyyy-MM-dd")} - {ev.Name}").AddDirectory(media.CreatedDate.Date.ToString("yyyy-MM-dd") + " - " + day.Name);
+                }
+                else
+                {
+                  dir = directory.AddDirectory($"{ev.DateFrom.ToString("yyyy-MM-dd")} - {ev.Name}").AddDirectory(media.CreatedDate.Date.ToString("yyyy-MM-dd"));
+                }
+              }
+              else
+              {
+                dir = directory.AddDirectory($"{ev.DateFrom.ToString("yyyy-MM-dd")} - {ev.Name}");
+              }
             }
 
             dir.Create();
+            string prefix = "Day_" + media.CreatedDate.ToString("yyyy-MM-dd_HH-mm-ss");
             
-            media.MoveTo(dir.ToFilePath(file.FileName));
+            if (!file.FileName.StartsWith("Day_"))
+            {
+              file = file.Directory.ToFilePath(prefix + "_" + file.FileName);
+            }
+            else
+            {
+              file = file.Directory.ToFilePath(prefix + "_" + file.FileName[24..]);
+            }
 
-            Console.WriteLine("Moved file to " + media.Path);
+            var destinationFileName = dir.ToFilePath(file.FileName);
+
+            if (media.Path != destinationFileName)
+            {
+              if (File.Exists(destinationFileName))
+              {
+                File.Delete(destinationFileName);
+              }
+              media.MoveTo(destinationFileName);
+
+              Console.WriteLine($"{index}/{count} - Moved file to " + media.Path);
+            }
+            else
+            {
+              Console.WriteLine($"{index}/{count} - File in right place, not moving (" + media.Path + ")");
+            }
+
+            Interlocked.Add(ref index, 1);
           }
           catch (Exception ex)
           {
             Console.WriteLine(ex.ToString());
           }
         });
+
+        RemoveEmptyDirectories(directory);
       }
       else
       {
@@ -100,6 +167,26 @@ internal class Program
       Console.WriteLine("Options:");
       p.WriteOptionDescriptions(Console.Out);
       return;
+    }
+  }
+
+  private static void RemoveEmptyDirectories(DirectoryPath directory)
+  {
+    var directories = Directory.GetDirectories(directory, "*.*", SearchOption.AllDirectories);
+    foreach (var item in directories)
+    {
+      if(Directory.GetFiles(item, "*.*").Length == 0 && Directory.GetDirectories(item).Length == 0)
+      {
+        try
+        {
+          Directory.Delete(item, true);
+          Console.WriteLine($"Removed: {item}");
+        }
+        catch (Exception ex)
+        {
+          Console.WriteLine(ex);
+        }
+      }
     }
   }
 }

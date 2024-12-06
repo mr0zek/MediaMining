@@ -27,7 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SortIntoFolders", "SortInto
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenerateEvent", "GenerateEvent\GenerateEvent.csproj", "{3780DFB4-7D25-4638-9F26-BCF0CF876442}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessPossitions", "ProcessPossitions\ProcessPossitions.csproj", "{553E271A-1FA6-48E0-B411-76297E2A7650}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessPossitions", "ProcessPossitions\ProcessPossitions.csproj", "{553E271A-1FA6-48E0-B411-76297E2A7650}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventsGenerator", "EventsGenerator\EventsGenerator.csproj", "{EDA8038C-992F-4DDF-A59E-329A13A102EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +73,10 @@ Global
 		{553E271A-1FA6-48E0-B411-76297E2A7650}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{553E271A-1FA6-48E0-B411-76297E2A7650}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{553E271A-1FA6-48E0-B411-76297E2A7650}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDA8038C-992F-4DDF-A59E-329A13A102EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDA8038C-992F-4DDF-A59E-329A13A102EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDA8038C-992F-4DDF-A59E-329A13A102EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDA8038C-992F-4DDF-A59E-329A13A102EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

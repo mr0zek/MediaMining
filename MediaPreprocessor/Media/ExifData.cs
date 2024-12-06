@@ -23,13 +23,14 @@ namespace MediaPreprocessor.Media
     public ExifData(IDictionary<string, string> data)
     {
       // CreatedDate
-      var dateTagNames = new[] { "Creation Date","Date/Time Original", "Create Date", "File Modification Date/Time" };
+      var dateTagNames = new[] { "Creation Date Value", "Create Date" };
 
-      string key = dateTagNames.First(f => data.ContainsKey(f) && data[f] != "0000-00-00 00:00:00");
+      string key = dateTagNames.First(f => data.ContainsKey(f) && data[f] != "0000-00-00 00:00:00");      
       string stringDate = data[key];
-      stringDate = ReplaceFirst(ReplaceFirst(stringDate, ":", "-"), ":", "-");
+      stringDate = stringDate[..19]; //remove timezone information
+      stringDate = ReplaceFirst(ReplaceFirst(stringDate, ":", "-"), ":", "-"); 
 
-      CreatedDate = DateTime.Parse(stringDate).ToUniversalTime().ToLocalTime();//on purpose
+      CreatedDate = DateTime.Parse(stringDate);
 
       // GPSLocation
       if (data.ContainsKey("GPS Latitude") && data.ContainsKey("GPS Longitude"))

@@ -99,7 +99,7 @@ namespace MediaPreprocessor.Media
         _dirty = false;
       }
     }
-    
+
     public void MoveTo(FilePath filePath)
     {
       if (Path == filePath)

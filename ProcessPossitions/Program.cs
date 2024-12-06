@@ -27,7 +27,7 @@ try
   {
     DirectoryPath directory = extra[0];
 
-    Console.WriteLine("Sorting files in directory : " + directory);
+    Console.WriteLine("Processing files from directory : " + directory);
 
     var files = Directory.GetFiles(directory, "*.*", SearchOption.AllDirectories)
     .Select(x => (FilePath)x)
@@ -57,8 +57,11 @@ try
 
     importers.Import(true);
 
+    var mapDirectory = directory.AddDirectory("map");
+    mapDirectory.Create();
+
     IMapGenerator mapGenerator = container.Resolve<IMapGenerator>();
-    mapGenerator.Generate(ev, new Media[] { }, directory);
+    mapGenerator.Generate(ev, new Media[] { }, mapDirectory);
   }
 }
 catch (OptionException e)

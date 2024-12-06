@@ -2,7 +2,7 @@
   "profiles": {
     "SortIntoFolders": {
       "commandName": "Project",
-      "commandLineArgs": "-e c:\\data\\exifTool\\exifTool.exe d:\\Islandia\\Posortowane\\"
+      "commandLineArgs": "-ev c:\\My\\Trips\\events\\ c:\\My\\Trips\\mp4\\"
     }
   }
 }

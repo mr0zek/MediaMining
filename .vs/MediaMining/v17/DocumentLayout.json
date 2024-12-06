@@ -1,26 +1,14 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\MediaMining\\",
+  "WorkspaceRootPath": "C:\\My\\Trips\\MediaMining\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{553E271A-1FA6-48E0-B411-76297E2A7650}|ProcessPossitions\\ProcessPossitions.csproj|d:\\mediamining\\processpossitions\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{553E271A-1FA6-48E0-B411-76297E2A7650}|ProcessPossitions\\ProcessPossitions.csproj|solutionrelative:processpossitions\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{0BC115F8-FFD1-4053-A014-343F9D8E83A3}|SortIntoFolders\\SortIntoFolders.csproj|c:\\my\\trips\\mediamining\\sortintofolders\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{0BC115F8-FFD1-4053-A014-343F9D8E83A3}|SortIntoFolders\\SortIntoFolders.csproj|solutionrelative:sortintofolders\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{70D5731C-59DF-4361-BB6E-658F77932E3A}|MediaMining.PositionImporter\\MediaMining.PositionImporter.csproj|d:\\mediamining\\mediamining.positionimporter\\positionsimporter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{70D5731C-59DF-4361-BB6E-658F77932E3A}|MediaMining.PositionImporter\\MediaMining.PositionImporter.csproj|solutionrelative:mediamining.positionimporter\\positionsimporter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{34FEDBBE-ACFA-484E-8744-79888A2697AB}|MediaPreprocessor\\MediaPreprocessor.csproj|d:\\mediamining\\mediapreprocessor\\directions\\directionsprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{34FEDBBE-ACFA-484E-8744-79888A2697AB}|MediaPreprocessor\\MediaPreprocessor.csproj|solutionrelative:mediapreprocessor\\directions\\directionsprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{70D5731C-59DF-4361-BB6E-658F77932E3A}|MediaMining.PositionImporter\\MediaMining.PositionImporter.csproj|d:\\mediamining\\mediamining.positionimporter\\googletakoutimporter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{70D5731C-59DF-4361-BB6E-658F77932E3A}|MediaMining.PositionImporter\\MediaMining.PositionImporter.csproj|solutionrelative:mediamining.positionimporter\\googletakoutimporter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{70D5731C-59DF-4361-BB6E-658F77932E3A}|MediaMining.PositionImporter\\MediaMining.PositionImporter.csproj|d:\\mediamining\\mediamining.positionimporter\\gpxpositionsimporter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{70D5731C-59DF-4361-BB6E-658F77932E3A}|MediaMining.PositionImporter\\MediaMining.PositionImporter.csproj|solutionrelative:mediamining.positionimporter\\gpxpositionsimporter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{0BC115F8-FFD1-4053-A014-343F9D8E83A3}|SortIntoFolders\\SortIntoFolders.csproj|c:\\my\\trips\\mediamining\\sortintofolders\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0BC115F8-FFD1-4053-A014-343F9D8E83A3}|SortIntoFolders\\SortIntoFolders.csproj|solutionrelative:sortintofolders\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -35,66 +23,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\MediaMining\\ProcessPossitions\\Program.cs",
-              "RelativeDocumentMoniker": "ProcessPossitions\\Program.cs",
-              "ToolTip": "D:\\MediaMining\\ProcessPossitions\\Program.cs",
-              "RelativeToolTip": "ProcessPossitions\\Program.cs",
-              "ViewState": "AQIAAAsAAAAAAAAAAAAgwDcAAAAPAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-03T12:54:41.671Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "DirectionsProvider.cs",
-              "DocumentMoniker": "D:\\MediaMining\\MediaPreprocessor\\Directions\\DirectionsProvider.cs",
-              "RelativeDocumentMoniker": "MediaPreprocessor\\Directions\\DirectionsProvider.cs",
-              "ToolTip": "D:\\MediaMining\\MediaPreprocessor\\Directions\\DirectionsProvider.cs",
-              "RelativeToolTip": "MediaPreprocessor\\Directions\\DirectionsProvider.cs",
-              "ViewState": "AQIAAD4AAAAAAAAAAAAYwEsAAAALAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-03T10:55:01.608Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "GpxPositionsImporter.cs",
-              "DocumentMoniker": "D:\\MediaMining\\MediaMining.PositionImporter\\GpxPositionsImporter.cs",
-              "RelativeDocumentMoniker": "MediaMining.PositionImporter\\GpxPositionsImporter.cs",
-              "ToolTip": "D:\\MediaMining\\MediaMining.PositionImporter\\GpxPositionsImporter.cs",
-              "RelativeToolTip": "MediaMining.PositionImporter\\GpxPositionsImporter.cs",
-              "ViewState": "AQIAACcAAAAAAAAAAAAowAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-03T10:53:48.99Z",
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\My\\Trips\\MediaMining\\SortIntoFolders\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "SortIntoFolders\\Properties\\launchSettings.json",
+              "ToolTip": "C:\\My\\Trips\\MediaMining\\SortIntoFolders\\Properties\\launchSettings.json",
+              "RelativeToolTip": "SortIntoFolders\\Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-12-06T13:06:30.932Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "PositionsImporter.cs",
-              "DocumentMoniker": "D:\\MediaMining\\MediaMining.PositionImporter\\PositionsImporter.cs",
-              "RelativeDocumentMoniker": "MediaMining.PositionImporter\\PositionsImporter.cs",
-              "ToolTip": "D:\\MediaMining\\MediaMining.PositionImporter\\PositionsImporter.cs",
-              "RelativeToolTip": "MediaMining.PositionImporter\\PositionsImporter.cs",
-              "ViewState": "AQIAACYAAAAAAAAAAAAYwDIAAAAKAAAA",
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\My\\Trips\\MediaMining\\SortIntoFolders\\Program.cs",
+              "RelativeDocumentMoniker": "SortIntoFolders\\Program.cs",
+              "ToolTip": "C:\\My\\Trips\\MediaMining\\SortIntoFolders\\Program.cs",
+              "RelativeToolTip": "SortIntoFolders\\Program.cs",
+              "ViewState": "AgIAADoAAAAAAAAAAAAgwEAAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-03T10:53:30.597Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "GoogleTakoutImporter.cs",
-              "DocumentMoniker": "D:\\MediaMining\\MediaMining.PositionImporter\\GoogleTakoutImporter.cs",
-              "RelativeDocumentMoniker": "MediaMining.PositionImporter\\GoogleTakoutImporter.cs",
-              "ToolTip": "D:\\MediaMining\\MediaMining.PositionImporter\\GoogleTakoutImporter.cs",
-              "RelativeToolTip": "MediaMining.PositionImporter\\GoogleTakoutImporter.cs",
-              "ViewState": "AQIAABAAAAAAAAAAAAAgwBoAAAAFAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-03T10:53:08.451Z",
+              "WhenOpened": "2024-12-06T12:43:32.781Z",
               "EditorCaption": ""
             }
           ]

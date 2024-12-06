@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -11,16 +12,13 @@ using Newtonsoft.Json.Linq;
 
 namespace MediaPreprocessor.Events
 {
-  class EventRepository : IEventRepository
+  public class EventRepository : IEventRepository
   {
     private readonly DirectoryPath _eventsPath;
     private readonly IDictionary<EventId, Event> _events = new Dictionary<EventId, Event>();
 
     public EventRepository(
-      IEventLogFactory eventLogFactory,
-      string eventsPath, 
-      IGeojsonGenerator geojsonGenerator,
-      IMapGenerator mapGenerator)
+      string eventsPath)
     {
       _eventsPath = eventsPath;
       LoadFromPath(eventsPath);
@@ -53,11 +51,22 @@ namespace MediaPreprocessor.Events
 
     public void LoadFromPath(DirectoryPath eventsPath)
     {
-      var files = Directory.GetFiles(eventsPath, "*.event", SearchOption.AllDirectories);
-      foreach (string file in files)
+      if (eventsPath.Exists)
       {
-        Event @event = Event.FromFile(file);
-        _events.Add(@event.Id, @event);        
+        var files = Directory.GetFiles(eventsPath, "*.json", SearchOption.AllDirectories);
+        foreach (string file in files)
+        {
+          try
+          {
+            Event @event = Event.FromFile(file);
+            _events.Add(@event.Id, @event);
+          }
+          catch(Exception ex)
+          {
+            Console.WriteLine($"Error in file: {file}"+ex.ToString());
+            throw;
+          }
+        }
       }
     }
 
