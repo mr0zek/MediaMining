@@ -3,8 +3,8 @@
   "WorkspaceRootPath": "C:\\My\\Trips\\MediaMining\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{0BC115F8-FFD1-4053-A014-343F9D8E83A3}|SortIntoFolders\\SortIntoFolders.csproj|c:\\my\\trips\\mediamining\\sortintofolders\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0BC115F8-FFD1-4053-A014-343F9D8E83A3}|SortIntoFolders\\SortIntoFolders.csproj|solutionrelative:sortintofolders\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{44BAB54D-CF90-401E-83F8-1D0F6AAA3092}|ScenarioAIGenerator\\ScenarioAIGenerator.csproj|c:\\my\\trips\\mediamining\\scenarioaigenerator\\aiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{44BAB54D-CF90-401E-83F8-1D0F6AAA3092}|ScenarioAIGenerator\\ScenarioAIGenerator.csproj|solutionrelative:scenarioaigenerator\\aiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -19,14 +19,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\My\\Trips\\MediaMining\\SortIntoFolders\\Program.cs",
-              "RelativeDocumentMoniker": "SortIntoFolders\\Program.cs",
-              "ToolTip": "C:\\My\\Trips\\MediaMining\\SortIntoFolders\\Program.cs",
-              "RelativeToolTip": "SortIntoFolders\\Program.cs",
-              "ViewState": "AgIAADoAAAAAAAAAAAAgwEIAAAAIAAAAAAAAAA==",
+              "Title": "AIService.cs",
+              "DocumentMoniker": "C:\\My\\Trips\\MediaMining\\ScenarioAIGenerator\\AIService.cs",
+              "RelativeDocumentMoniker": "ScenarioAIGenerator\\AIService.cs",
+              "ToolTip": "C:\\My\\Trips\\MediaMining\\ScenarioAIGenerator\\AIService.cs",
+              "RelativeToolTip": "ScenarioAIGenerator\\AIService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-06T12:43:32.781Z",
+              "WhenOpened": "2025-01-01T15:30:16.376Z",
               "EditorCaption": ""
             }
           ]

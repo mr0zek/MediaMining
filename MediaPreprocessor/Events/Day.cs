@@ -19,6 +19,8 @@ namespace MediaPreprocessor.Events
       set => _date = value;
     }
 
-    public List<Place> Places { get; set; }=new List<Place>();    
+    public List<Place> Places { get; set; }=new List<Place>();
+
+    public List<Trip> Trips { get; set; } = new List<Trip>();
   }
 }

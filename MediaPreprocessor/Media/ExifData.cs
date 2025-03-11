@@ -23,7 +23,7 @@ namespace MediaPreprocessor.Media
     public ExifData(IDictionary<string, string> data)
     {
       // CreatedDate
-      var dateTagNames = new[] { "Creation Date Value", "Create Date" };
+      var dateTagNames = new[] { "Creation Date Value", "Date/Time Original", "Create Date" };
 
       string key = dateTagNames.First(f => data.ContainsKey(f) && data[f] != "0000-00-00 00:00:00");      
       string stringDate = data[key];

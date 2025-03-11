@@ -36,11 +36,7 @@ internal class Program
           eventsDirectory = directory.AddDirectory("events").ToString();
         }
 
-        Console.WriteLine("Sorting files in directory : " + directory);
-
-        var files = Directory.GetFiles(directory, "*.*", SearchOption.AllDirectories)
-        .Select(x => (FilePath)x)
-         .Where(f => new MediaTypeDetector().IsKnownType(f)).ToList();
+        Console.WriteLine("Sorting files in directory : " + directory);        
 
         IContainer container = Bootstrap.BuildContainer(new string[0], (builder, options) =>
         {
@@ -55,9 +51,6 @@ internal class Program
             .AsImplementedInterfaces();
         });    
 
-        int count = files.Count();
-        int index = 0;
-
         var eventsRepository = container.Resolve<IEventRepository>();
 
         DirectoryPath noExifDirectory = directory.AddDirectory("NoExifData");
@@ -65,6 +58,13 @@ internal class Program
         RemoveEmptyDirectories(directory);
 
         noExifDirectory.Create();
+
+        var files = Directory.GetFiles(directory, "*.*", SearchOption.AllDirectories)
+        .Select(x => (FilePath)x)
+         .Where(f => new MediaTypeDetector().IsKnownType(f)).ToList();
+
+        int count = files.Count();
+        int index = 0;
 
         files.ToList().AsParallel().ForAll(file =>
         //files.ToList().ForEach(file =>
@@ -79,7 +79,7 @@ internal class Program
             catch
             {
               FilePath f = noExifDirectory.ToFilePath(file.FileName);
-              File.Move(file, f);
+              File.Move(file, f, true);
               Console.WriteLine("No exif data, moving to: " + f);
               return;
             }

@@ -11,7 +11,7 @@ namespace MediaPreprocessor.Media
     private readonly IEnumerable<string> _moviesExtensions;
     private readonly IEnumerable<string> _photosExtensions;
 
-    public MediaTypeDetector() : this(new[] { "mp4", "mts", "mov" }, new[] { "jpg", "jpeg", "webp" })
+    public MediaTypeDetector() : this(new[] { "mp4", "mts", "mov", "avi" }, new[] { "jpg", "jpeg", "webp" })
     {
     }
 
@@ -19,7 +19,7 @@ namespace MediaPreprocessor.Media
     {
       _moviesExtensions = moviesExtensions;
       _photosExtensions = photosExtensions;
-    }    
+    }
 
     public MediaType Detect(FilePath filePath)
     {
@@ -34,7 +34,7 @@ namespace MediaPreprocessor.Media
         return MediaType.Image;
       }
 
-      throw new ArgumentException("Unrecognized file type : "+filePath);
+      throw new ArgumentException("Unrecognized file type : " + filePath);
     }
 
     public bool IsKnownType(FilePath filePath)
