@@ -15,6 +15,8 @@ namespace MediaPreprocessor.Events
 
     [JsonIgnore]
     public Time Time { get => _time; set => _time = value; }
-    public string LocationName { get; set; }     
+    public string LocationName { get; set; }
+
+    public string[] Facts { get; set; } = [];
   }
 }

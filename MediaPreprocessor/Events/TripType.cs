@@ -4,6 +4,7 @@
   {
     Walk,
     Bus,
-    Trekking
+    Trekking,
+    Flight
   }
 }
