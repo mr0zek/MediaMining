@@ -1,0 +1,1 @@
+x:\Wyprawy\Tools\SortIntoFolders\SortIntoFolders.exe --ev x:\Wyprawy\events\ %1

@@ -2,7 +2,7 @@
   "profiles": {
     "SortIntoFolders": {
       "commandName": "Project",
-      "commandLineArgs": "-ev c:\\My\\Trips\\events\\ d:\\Islandia\\Posortowane\\"
+      "commandLineArgs": "--ev x:\\Wyprawy\\events c:\\My\\Wyprawy\\"
     }
   }
 }

@@ -3,16 +3,20 @@
   "WorkspaceRootPath": "C:\\My\\Trips\\MediaMining\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{34FEDBBE-ACFA-484E-8744-79888A2697AB}|MediaPreprocessor\\MediaPreprocessor.csproj|c:\\my\\trips\\mediamining\\mediapreprocessor\\events\\place.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{34FEDBBE-ACFA-484E-8744-79888A2697AB}|MediaPreprocessor\\MediaPreprocessor.csproj|solutionrelative:mediapreprocessor\\events\\place.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{0BC115F8-FFD1-4053-A014-343F9D8E83A3}|SortIntoFolders\\SortIntoFolders.csproj|c:\\my\\trips\\mediamining\\sortintofolders\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0BC115F8-FFD1-4053-A014-343F9D8E83A3}|SortIntoFolders\\SortIntoFolders.csproj|solutionrelative:sortintofolders\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{34FEDBBE-ACFA-484E-8744-79888A2697AB}|MediaPreprocessor\\MediaPreprocessor.csproj|c:\\my\\trips\\mediamining\\mediapreprocessor\\events\\triptype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{34FEDBBE-ACFA-484E-8744-79888A2697AB}|MediaPreprocessor\\MediaPreprocessor.csproj|solutionrelative:mediapreprocessor\\events\\triptype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{89BA19D5-F366-A4C9-267B-E83E5DDED74D}|ObjectRecognition\\ObjectDetection.csproj|c:\\my\\trips\\mediamining\\objectrecognition\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{89BA19D5-F366-A4C9-267B-E83E5DDED74D}|ObjectRecognition\\ObjectDetection.csproj|solutionrelative:objectrecognition\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0BC115F8-FFD1-4053-A014-343F9D8E83A3}|SortIntoFolders\\SortIntoFolders.csproj|c:\\my\\trips\\mediamining\\sortintofolders\\fodyweavers.xml||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{0BC115F8-FFD1-4053-A014-343F9D8E83A3}|SortIntoFolders\\SortIntoFolders.csproj|solutionrelative:sortintofolders\\fodyweavers.xml||{8B382828-6202-11D1-8870-0000F87579D2}"
+      "AbsoluteMoniker": "D:0:0:{89BA19D5-F366-A4C9-267B-E83E5DDED74D}|ObjectRecognition\\ObjectDetection.csproj|c:\\my\\trips\\mediamining\\objectrecognition\\objectdetection\\azure\\azuredetector.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{89BA19D5-F366-A4C9-267B-E83E5DDED74D}|ObjectRecognition\\ObjectDetection.csproj|solutionrelative:objectrecognition\\objectdetection\\azure\\azuredetector.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{553E271A-1FA6-48E0-B411-76297E2A7650}|ProcessPossitions\\ProcessPossitions.csproj|c:\\my\\trips\\mediamining\\processpossitions\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{553E271A-1FA6-48E0-B411-76297E2A7650}|ProcessPossitions\\ProcessPossitions.csproj|solutionrelative:processpossitions\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,45 +26,58 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Place.cs",
-              "DocumentMoniker": "C:\\My\\Trips\\MediaMining\\MediaPreprocessor\\Events\\Place.cs",
-              "RelativeDocumentMoniker": "MediaPreprocessor\\Events\\Place.cs",
-              "ToolTip": "C:\\My\\Trips\\MediaMining\\MediaPreprocessor\\Events\\Place.cs",
-              "RelativeToolTip": "MediaPreprocessor\\Events\\Place.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAtAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "AzureDetector.cs",
+              "DocumentMoniker": "C:\\My\\Trips\\MediaMining\\ObjectRecognition\\ObjectDetection\\Azure\\AzureDetector.cs",
+              "RelativeDocumentMoniker": "ObjectRecognition\\ObjectDetection\\Azure\\AzureDetector.cs",
+              "ToolTip": "C:\\My\\Trips\\MediaMining\\ObjectRecognition\\ObjectDetection\\Azure\\AzureDetector.cs",
+              "RelativeToolTip": "ObjectRecognition\\ObjectDetection\\Azure\\AzureDetector.cs",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAIwFEAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-11T18:12:14.368Z",
+              "WhenOpened": "2025-05-22T09:23:14.544Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "TripType.cs",
-              "DocumentMoniker": "C:\\My\\Trips\\MediaMining\\MediaPreprocessor\\Events\\TripType.cs",
-              "RelativeDocumentMoniker": "MediaPreprocessor\\Events\\TripType.cs",
-              "ToolTip": "C:\\My\\Trips\\MediaMining\\MediaPreprocessor\\Events\\TripType.cs",
-              "RelativeToolTip": "MediaPreprocessor\\Events\\TripType.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAKAAAAAAAAAA==",
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\My\\Trips\\MediaMining\\ObjectRecognition\\Program.cs",
+              "RelativeDocumentMoniker": "ObjectRecognition\\Program.cs",
+              "ToolTip": "C:\\My\\Trips\\MediaMining\\ObjectRecognition\\Program.cs",
+              "RelativeToolTip": "ObjectRecognition\\Program.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAACAAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-11T18:09:45.933Z",
+              "WhenOpened": "2025-05-22T05:45:10.089Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "FodyWeavers.xml",
-              "DocumentMoniker": "C:\\My\\Trips\\MediaMining\\SortIntoFolders\\FodyWeavers.xml",
-              "RelativeDocumentMoniker": "SortIntoFolders\\FodyWeavers.xml",
-              "ToolTip": "C:\\My\\Trips\\MediaMining\\SortIntoFolders\\FodyWeavers.xml",
-              "RelativeToolTip": "SortIntoFolders\\FodyWeavers.xml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003576|",
-              "WhenOpened": "2025-03-11T18:04:07.126Z",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\My\\Trips\\MediaMining\\ProcessPossitions\\Program.cs",
+              "RelativeDocumentMoniker": "ProcessPossitions\\Program.cs",
+              "ToolTip": "C:\\My\\Trips\\MediaMining\\ProcessPossitions\\Program.cs",
+              "RelativeToolTip": "ProcessPossitions\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-22T05:45:03.583Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\My\\Trips\\MediaMining\\SortIntoFolders\\Program.cs",
+              "RelativeDocumentMoniker": "SortIntoFolders\\Program.cs",
+              "ToolTip": "C:\\My\\Trips\\MediaMining\\SortIntoFolders\\Program.cs*",
+              "RelativeToolTip": "SortIntoFolders\\Program.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAiwBQAAABqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-21T14:22:36.636Z",
               "EditorCaption": ""
             }
           ]
